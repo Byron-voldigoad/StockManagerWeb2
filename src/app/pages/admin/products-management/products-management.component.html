@@ -1,0 +1,255 @@
+<app-admin-layout title="📦 Gestion des Produits" subtitle="Ajouter, modifier et supprimer vos produits">
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
+    
+    <!-- Barre d'actions mobile -->
+    <div class="lg:hidden mb-4">
+      <button 
+        (click)="showAddForm = true"
+        class="w-full bg-amber-500 hover:bg-amber-600 text-white px-4 py-3 rounded-lg transition-colors flex items-center justify-center gap-2 font-medium"
+      >
+        <span class="text-lg">+</span>
+        Ajouter un produit
+      </button>
+    </div>
+
+    <!-- Barre de recherche et filtres - RESPONSIVE -->
+    <div class="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-4 sm:mb-6 border border-amber-200">
+      
+      <!-- En-tête desktop -->
+      <div class="hidden lg:flex items-center justify-between mb-4">
+        <div class="flex items-center gap-4">
+          <h3 class="text-lg font-semibold text-amber-800">Filtres et recherche</h3>
+        </div>
+        <button 
+          (click)="showAddForm = true"
+          class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
+        >
+          <span>+</span>
+          Ajouter un produit
+        </button>
+      </div>
+
+      <!-- Grille de filtres -->
+      <div class="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        
+        <!-- Recherche -->
+        <div class="xs:col-span-2 lg:col-span-1">
+          <label class="block text-sm font-medium text-amber-700 mb-2">
+            🔍 Rechercher
+          </label>
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            (input)="applyFilters()"
+            placeholder="Nom du produit..."
+            class="w-full px-3 py-2.5 border border-amber-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm"
+          />
+        </div>
+
+        <!-- Filtre par catégorie -->
+        <div>
+          <label class="block text-sm font-medium text-amber-700 mb-2">
+            🏷️ Catégorie
+          </label>
+          <select
+            [(ngModel)]="selectedCategory"
+            (change)="applyFilters()"
+            class="w-full px-3 py-2.5 border border-amber-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm"
+          >
+            <option value="Tous">Toutes</option>
+            <option *ngFor="let category of categories" [value]="category">
+              {{ category }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Tri -->
+        <div>
+          <label class="block text-sm font-medium text-amber-700 mb-2">
+            📊 Trier par
+          </label>
+          <select
+            [(ngModel)]="sortBy"
+            (change)="applyFilters()"
+            class="w-full px-3 py-2.5 border border-amber-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm"
+          >
+            <option value="newest">Plus récent</option>
+            <option value="oldest">Plus ancien</option>
+            <option value="price_asc">Prix (croissant)</option>
+            <option value="price_desc">Prix (décroissant)</option>
+            <option value="name">Nom (A-Z)</option>
+          </select>
+        </div>
+
+        <!-- Compteur résultats -->
+        <div class="flex items-end">
+          <div class="text-sm text-amber-600 bg-amber-50 px-3 py-2 rounded-lg w-full">
+            <span class="font-semibold">{{ filteredProducts.length }}</span> 
+            produit(s) trouvé(s)
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="flex justify-center py-8 sm:py-12">
+      <div class="text-center">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-amber-200 border-t-amber-500"></div>
+        <p class="mt-4 text-amber-600 font-medium text-sm sm:text-base">
+          Chargement des produits...
+        </p>
+      </div>
+    </div>
+
+    <!-- Liste des produits - RESPONSIVE -->
+    <div *ngIf="!isLoading" class="bg-white rounded-xl shadow-sm border border-amber-200 overflow-hidden">
+      
+      <!-- En-tête du tableau - DESKTOP -->
+      <div class="hidden lg:grid lg:grid-cols-12 gap-4 p-4 bg-amber-50 border-b border-amber-200 font-semibold text-amber-800 text-sm">
+        <div class="col-span-1">Image</div>
+        <div class="col-span-3">Nom</div>
+        <div class="col-span-2">Catégorie</div>
+        <div class="col-span-2">Prix</div>
+        <div class="col-span-2">Stock</div>
+        <div class="col-span-2">Actions</div>
+      </div>
+
+      <!-- Produits - VERSION DESKTOP -->
+      <div *ngIf="filteredProducts.length > 0" class="hidden lg:block divide-y divide-amber-100">
+        <div *ngFor="let product of filteredProducts"
+             class="grid grid-cols-12 gap-4 p-4 items-center hover:bg-amber-50 transition-colors">
+          
+          <!-- Image -->
+          <div class="col-span-1">
+            <img [src]="product.image" [alt]="product.name" 
+                 class="w-12 h-12 object-cover rounded-lg">
+          </div>
+
+          <!-- Nom -->
+          <div class="col-span-3">
+            <h3 class="font-medium text-amber-900 text-sm">{{ product.name }}</h3>
+            <p class="text-xs text-amber-600 truncate mt-1">
+              {{ product.description }}
+            </p>
+          </div>
+
+          <!-- Catégorie -->
+          <div class="col-span-2">
+            <span class="px-2 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-medium">
+              {{ product.category }}
+            </span>
+          </div>
+
+          <!-- Prix -->
+          <div class="col-span-2 font-semibold text-amber-700 text-sm">
+            {{ product.price | number }} FCFA
+          </div>
+
+          <!-- Stock -->
+          <div class="col-span-2">
+            <span [class]="getStockBadgeClass(product.quantity)" class="text-xs">
+              {{ product.quantity }}
+            </span>
+          </div>
+
+          <!-- Actions -->
+          <div class="col-span-2 flex space-x-2">
+            <button (click)="editProduct(product)"
+                    class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded transition-colors flex items-center justify-center"
+                    title="Modifier">
+              <span class="text-sm">✏️</span>
+            </button>
+            <button (click)="deleteProduct(product)"
+                    class="bg-red-500 hover:bg-red-600 text-white p-2 rounded transition-colors flex items-center justify-center"
+                    title="Supprimer">
+              <span class="text-sm">🗑️</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Produits - VERSION MOBILE/TABLETTE -->
+      <div *ngIf="filteredProducts.length > 0" class="lg:hidden divide-y divide-amber-100">
+        <div *ngFor="let product of filteredProducts"
+             class="p-4 hover:bg-amber-50 transition-colors">
+          
+          <div class="flex items-start gap-3">
+            <!-- Image -->
+            <img [src]="product.image" [alt]="product.name" 
+                 class="w-16 h-16 object-cover rounded-lg flex-shrink-0">
+
+            <!-- Contenu -->
+            <div class="flex-1 min-w-0">
+              <div class="flex items-start justify-between gap-2">
+                <div class="flex-1 min-w-0">
+                  <h3 class="font-semibold text-amber-900 text-sm leading-tight truncate">
+                    {{ product.name }}
+                  </h3>
+                  <p class="text-amber-600 text-xs mt-1 line-clamp-2">
+                    {{ product.description }}
+                  </p>
+                </div>
+                
+                <!-- Actions mobile -->
+                <div class="flex gap-1 flex-shrink-0">
+                  <button (click)="editProduct(product)"
+                          class="bg-blue-500 hover:bg-blue-600 text-white p-1.5 rounded transition-colors"
+                          title="Modifier">
+                    <span class="text-xs">✏️</span>
+                  </button>
+                  <button (click)="deleteProduct(product)"
+                          class="bg-red-500 hover:bg-red-600 text-white p-1.5 rounded transition-colors"
+                          title="Supprimer">
+                    <span class="text-xs">🗑️</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Métadonnées -->
+              <div class="flex flex-wrap gap-2 mt-2">
+                <span class="px-2 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-medium">
+                  {{ product.category }}
+                </span>
+                <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                  {{ product.price | number }} FCFA
+                </span>
+                <span [class]="getStockBadgeClass(product.quantity)" class="text-xs">
+                  Stock: {{ product.quantity }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="filteredProducts.length === 0 && !isLoading" class="text-center py-12 sm:py-16">
+        <div class="text-5xl sm:text-6xl mb-4">📦</div>
+        <h3 class="text-lg sm:text-xl font-semibold text-amber-800 mb-2">
+          Aucun produit trouvé
+        </h3>
+        <p class="text-amber-600 text-sm sm:text-base mb-6 max-w-md mx-auto">
+          {{ searchQuery || selectedCategory !== 'Tous' ? 
+              'Aucun produit ne correspond à vos critères.' : 
+              'Commencez par ajouter votre premier produit !' }}
+        </p>
+        <button (click)="showAddForm = true"
+                class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg transition-colors font-medium">
+          + Ajouter un produit
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal Formulaire -->
+  <app-product-form
+    *ngIf="showAddForm"
+    [editingProduct]="editingProduct"
+    [categories]="categories"
+    [showForm]="showAddForm"
+    (saved)="onProductSaved($event)"
+    (cancelled)="onFormCancelled()"
+  ></app-product-form>
+</app-admin-layout>

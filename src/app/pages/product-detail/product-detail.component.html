@@ -1,0 +1,126 @@
+<app-public-layout>
+<div class="min-h-screen bg-amber-50">
+  
+  <main class="container mx-auto px-4 py-8">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="min-h-[60vh] flex items-center justify-center">
+      <div class="text-center">
+        <div class="inline-block animate-spin rounded-full h-16 w-16 border-4 border-amber-200 border-t-amber-500"></div>
+        <!-- MODIFICATION: Texte de chargement dynamique -->
+        <p class="mt-4 text-amber-600 font-medium">
+          {{ configService.getSetting('loading_product') || 'Chargement du trésor...' }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error && !isLoading" class="min-h-[60vh] flex items-center justify-center">
+      <div class="text-center max-w-md mx-auto p-6 bg-red-50 rounded-lg border border-red-200">
+        <div class="text-4xl mb-4">⚠️</div>
+        <!-- MODIFICATION: Titre erreur dynamique -->
+        <h3 class="text-lg font-semibold text-red-800 mb-2">
+          {{ configService.getSetting('error_title') || 'Oups !' }}
+        </h3>
+        <p class="text-red-600 mb-4">{{ error }}</p>
+        <button 
+          (click)="goBack()"
+          class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg transition-colors"
+        >
+          <!-- MODIFICATION: Bouton retour dynamique -->
+          {{ configService.getSetting('back_button') || 'Retour aux produits' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Content (seulement quand chargé et sans erreur) -->
+    <div *ngIf="!isLoading && !error && product">
+      <!-- Bouton retour -->
+      <button (click)="goBack()" 
+              class="flex items-center gap-2 text-amber-600 hover:text-amber-800 
+                     mb-6 transition-colors">
+        <span>←</span>
+        <!-- MODIFICATION: Texte retour dynamique -->
+        {{ configService.getSetting('back_button') || 'Retour aux produits' }}
+      </button>
+
+      <!-- Grille produit -->
+      <div class="grid md:grid-cols-2 gap-8 lg:gap-12">
+        <!-- Image avec skeleton -->
+        <div class="aspect-square rounded-lg overflow-hidden shadow-xl bg-white">
+          <img 
+            [src]="product.image" 
+            [alt]="product.name" 
+            class="w-full h-full object-cover"
+          >
+        </div>
+
+        <!-- Détails -->
+        <div class="flex flex-col justify-center">
+          <!-- Catégorie -->
+          <span 
+            class="inline-block w-fit px-3 py-1 rounded-full text-sm font-medium mb-4"
+            [style.background]="'hsl(var(--' + product.category_color + '-100))'"
+            [style.color]="'hsl(var(--' + product.category_color + '-800))'"
+          >
+            {{ product.category }}
+          </span>
+          
+          <!-- Nom -->
+          <h1 class="text-4xl font-bold mb-4 text-amber-900">
+            {{ product.name }}
+          </h1>
+          
+          <!-- Prix -->
+          <p class="text-5xl font-bold text-amber-600 mb-6">
+            {{ product.price }} FCFA
+          </p>
+          
+          <!-- Quantité -->
+          <div class="flex items-center gap-2 mb-6 text-amber-700">
+            <span>📦</span>
+            <!-- MODIFICATION: Texte quantité dynamique -->
+            <span>
+              {{ configService.getSetting('quantity_label') || 'Quantité disponible' }} : {{ product.quantity }}
+            </span>
+          </div>
+
+          <!-- Description -->
+          <p class="text-lg text-amber-800/80 mb-8 leading-relaxed">
+            {{ product.description }}
+          </p>
+
+          <!-- Boutons d'action -->
+          <div class="flex gap-4">
+            <button (click)="showInterest()" 
+                    class="flex-1 bg-amber-500 hover:bg-amber-600 text-white 
+                           px-6 py-3 rounded-lg text-lg font-semibold 
+                           transition-all duration-300">
+              <!-- MODIFICATION: Bouton intérêt dynamique -->
+              {{ configService.getSetting('interest_button') || 'Je suis intéressé(e)' }}
+            </button>
+            <button routerLink="/contact"
+                    class="bg-transparent border border-amber-300 text-amber-700 
+                           hover:bg-amber-100 px-6 py-3 rounded-lg text-lg font-semibold 
+                           transition-all duration-300">
+              <!-- MODIFICATION: Bouton contact dynamique -->
+              {{ configService.getSetting('contact_button') || 'Contactez-nous' }}
+            </button>
+          </div>
+
+          <!-- Info réservation -->
+          <div class="mt-8 p-4 bg-amber-100/50 rounded-lg border border-amber-200">
+            <p class="text-sm text-amber-700">
+              💡 
+              <!-- MODIFICATION: Info réservation dynamique -->
+              <span class="font-medium">
+                {{ configService.getSetting('reservation_info_title') || "Bon à savoir" }} :
+              </span> 
+              {{ configService.getSetting('reservation_info_text') || "L'achat en ligne sera bientôt disponible. En attendant, contactez-nous pour réserver cet article." }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</app-public-layout>

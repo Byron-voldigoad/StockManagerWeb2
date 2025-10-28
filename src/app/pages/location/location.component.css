@@ -1,0 +1,27 @@
+/* Styles pour la carte */
+#map {
+  height: 400px;
+  z-index: 1;
+}
+
+/* Correction pour Leaflet */
+:host ::ng-deep .leaflet-container {
+  height: 100%;
+  font-family: inherit;
+}
+
+:host ::ng-deep .custom-marker,
+:host ::ng-deep .user-marker {
+  background: transparent !important;
+  border: none !important;
+  font-size: 20px;
+}
+
+:host ::ng-deep .leaflet-popup-content {
+  font-family: inherit;
+  margin: 12px;
+}
+
+:host ::ng-deep .leaflet-popup-content-wrapper {
+  border-radius: 8px;
+}

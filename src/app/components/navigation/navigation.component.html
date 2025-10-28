@@ -1,0 +1,54 @@
+<nav class="sticky top-0 z-50 bg-amber-50/80 backdrop-blur-md border-b border-amber-200">
+  <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+    <!-- Logo dynamique -->
+    <a 
+      routerLink="/" 
+      class="text-2xl font-bold text-amber-700 hover:text-amber-800 transition-colors flex items-center gap-2"
+    >
+      <span>🏺</span>
+      {{ configService.getSetting('site_name') || 'La Brocante' }}
+    </a>
+    
+    <!-- Menu Desktop dynamique -->
+    <div class="hidden md:flex gap-6">
+      <a 
+        routerLink="/" 
+        routerLinkActive="text-amber-600 font-semibold" 
+        class="text-amber-800 hover:text-amber-600 transition-colors duration-300"
+      >
+        {{ configService.getSetting('menu_accueil') || 'Accueil' }}
+      </a>
+      <a 
+        routerLink="/produits" 
+        routerLinkActive="text-amber-600 font-semibold"
+        class="text-amber-800 hover:text-amber-600 transition-colors duration-300"
+      >
+        {{ configService.getSetting('menu_produits') || 'Produits' }}
+      </a>
+      <a 
+        routerLink="/contact" 
+        routerLinkActive="text-amber-600 font-semibold"
+        class="text-amber-800 hover:text-amber-600 transition-colors duration-300"
+      >
+        {{ configService.getSetting('menu_contact') || 'Contact' }}
+      </a>
+      <a 
+        routerLink="/localisation" 
+        routerLinkActive="text-amber-600 font-semibold"
+        class="text-amber-800 hover:text-amber-600 transition-colors duration-300"
+      >
+        {{ configService.getSetting('menu_localisation') || 'Localisation' }}
+      </a>
+    </div>
+
+    <!-- Menu Mobile (à ajouter plus tard) -->
+    <div class="md:hidden">
+      <!-- Burger menu icon -->
+      <button class="text-amber-700 hover:text-amber-600 transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</nav>

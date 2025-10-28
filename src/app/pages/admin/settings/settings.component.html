@@ -1,0 +1,243 @@
+<div class="p-6 bg-gray-50 min-h-screen">
+  <!-- En-tête -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Configuration du Site</h1>
+    <p class="text-gray-600 mt-2">Modifiez tous les textes et contenus de votre site</p>
+    
+    <!-- Debug info -->
+    <div class="mt-4 p-4 bg-yellow-100 border border-yellow-300 rounded">
+      <p class="text-sm text-yellow-800">
+        <strong>Debug:</strong> 
+        {{ settings.length }} paramètres chargés, 
+        {{ categories.length }} catégories trouvées
+      </p>
+      <p class="text-xs text-yellow-600 mt-1">
+        Catégories: {{ categories.join(', ') }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="text-center py-12">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500 mx-auto"></div>
+    <p class="mt-4 text-gray-600">Chargement des paramètres...</p>
+  </div>
+
+  <!-- Navigation par catégories -->
+  <div *ngIf="!isLoading && categories.length > 0" class="mb-8 bg-white rounded-lg shadow-sm border">
+    <div class="flex overflow-x-auto border-b">
+      <button 
+        *ngFor="let category of categories"
+        (click)="selectedCategory = category"
+        [class]="selectedCategory === category 
+          ? 'border-b-2 border-amber-500 text-amber-600 bg-amber-50' 
+          : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'"
+        class="flex-shrink-0 px-6 py-4 font-medium transition-colors duration-200"
+      >
+        {{ getCategoryLabel(category) }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Contenu des paramètres -->
+  <div *ngIf="!isLoading && categories.length > 0" class="grid gap-6">
+    <div *ngFor="let setting of getSettingsByCategory()" 
+         class="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow duration-200">
+      
+      <!-- En-tête du paramètre -->
+      <div class="p-6 border-b border-gray-100">
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">
+          {{ setting.description }}
+        </h3>
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-gray-500 font-mono bg-gray-50 px-2 py-1 rounded">
+            {{ setting.key }}
+          </span>
+          <span class="text-xs font-medium px-2 py-1 rounded"
+                [class.bg-amber-100]="setting.type === 'text'"
+                [class.bg-blue-100]="setting.type === 'json'"
+                [class.text-amber-800]="setting.type === 'text'"
+                [class.text-blue-800]="setting.type === 'json'">
+            {{ setting.type }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Champ de saisie -->
+       <!-- ... code existant ... -->
+
+      <!-- Champ de saisie -->
+      <div class="p-6">
+        <!-- Champ texte normal -->
+        <div *ngIf="setting.type === 'text'" class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">
+            Valeur actuelle :
+          </label>
+          <input
+            type="text"
+            [value]="setting.value"
+            (input)="onSettingChange(setting.key, $event)"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors duration-200"
+            placeholder="Entrez la nouvelle valeur..."
+          />
+        </div>
+
+        <!-- NOUVEAU: Champ image -->
+        <div *ngIf="setting.type === 'image'" class="space-y-4">
+          <label class="block text-sm font-medium text-gray-700">
+            Image actuelle :
+          </label>
+          
+          <!-- Aperçu de l'image actuelle -->
+          <div *ngIf="setting.value" class="mb-4">
+            <img 
+              [src]="setting.value" 
+              [alt]="setting.description"
+              class="max-w-full h-32 object-cover rounded-lg border border-gray-300"
+            >
+            <p class="text-xs text-gray-500 mt-1 break-all">URL: {{ setting.value }}</p>
+          </div>
+          
+          <div *ngIf="!setting.value" class="mb-4 p-4 bg-gray-100 rounded-lg text-center">
+            <p class="text-gray-500 text-sm">Aucune image définie</p>
+          </div>
+
+          <!-- Upload nouvelle image -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Nouvelle image :
+            </label>
+            <input
+              type="file"
+              (change)="onImageChange(setting.key, $event)"
+              accept="image/*"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors duration-200"
+            />
+            <p class="text-xs text-gray-500 mt-1">Formats acceptés: JPG, PNG, WebP (max 5MB)</p>
+          </div>
+
+          <!-- Aperçu nouvelle image -->
+          <div *ngIf="imageFiles[setting.key]" class="mt-4">
+            <p class="text-sm font-medium text-gray-700 mb-2">Aperçu :</p>
+            <img 
+              [id]="'preview-' + setting.key"
+              class="max-w-full h-32 object-cover rounded-lg border border-amber-300"
+            >
+          </div>
+        </div>
+
+        <!-- Champ JSON existant -->
+        <div *ngIf="setting.type === 'json'" class="space-y-2">
+          <!-- ... code JSON existant ... -->
+        </div>
+
+        <!-- Indicateur de modifications -->
+        <div class="mt-4 flex items-center justify-between">
+          <span class="text-sm text-gray-500">
+            Dernière modification : {{ setting.updated_at | date:'medium' }}
+          </span>
+          <span *ngIf="hasUnsavedChangesForKey(setting.key)" 
+                class="flex items-center text-sm text-amber-600 font-medium">
+            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clip-rule="evenodd"/>
+            </svg>
+            Modifications non sauvegardées
+          </span>
+        </div>
+      </div>
+
+<!-- ... code existant ... -->
+      <div class="p-6">
+        <div *ngIf="setting.type === 'text'" class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">
+            Valeur actuelle :
+          </label>
+          <input
+            type="text"
+            [value]="setting.value"
+            (input)="onSettingChange(setting.key, $event)"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors duration-200"
+            placeholder="Entrez la nouvelle valeur..."
+          />
+        </div>
+
+        <div *ngIf="setting.type === 'json'" class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">
+            Valeur JSON :
+          </label>
+          <textarea
+            [value]="formatJson(setting.value)"
+            (input)="onSettingChange(setting.key, $event)"
+            rows="6"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 font-mono text-sm transition-colors duration-200"
+            placeholder='{"key": "value"}'
+          ></textarea>
+          <p class="text-xs text-gray-500">
+            Format JSON valide requis. Utilisez des guillemets doubles.
+          </p>
+        </div>
+
+        <!-- Indicateur de modifications non sauvegardées -->
+        <div class="mt-4 flex items-center justify-between">
+          <span class="text-sm text-gray-500">
+            Dernière modification : {{ setting.updated_at | date:'medium' }}
+          </span>
+          <span *ngIf="hasUnsavedChangesForKey(setting.key)" 
+                class="flex items-center text-sm text-amber-600 font-medium">
+            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clip-rule="evenodd"/>
+            </svg>
+            Modifications non sauvegardées
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Message si aucune catégorie -->
+  <div *ngIf="!isLoading && categories.length === 0" 
+       class="bg-white rounded-lg shadow-sm border p-12 text-center">
+    <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+    </svg>
+    <h3 class="text-lg font-medium text-gray-900 mb-2">Aucun paramètre trouvé</h3>
+    <p class="text-gray-500 mb-4">La table site_settings est vide ou inaccessible.</p>
+    <p class="text-sm text-gray-400">Vérifiez la console pour les erreurs.</p>
+  </div>
+
+  <!-- Barre d'actions fixes en bas -->
+  <div *ngIf="!isLoading && categories.length > 0" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div>
+        <span *ngIf="hasUnsavedChanges" 
+              class="text-amber-600 font-medium">
+          {{ unsavedChangesCount }} modification(s) en attente
+        </span>
+        <span *ngIf="noUnsavedChanges" 
+              class="text-gray-500">
+          Toutes les modifications sont sauvegardées
+        </span>
+      </div>
+      
+      <div class="flex space-x-3">
+        <button
+          (click)="cancelChanges()"
+          [disabled]="noUnsavedChanges"
+          class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+        >
+          Annuler
+        </button>
+        <button
+          (click)="saveChanges()"
+          [disabled]="noUnsavedChanges"
+          class="px-6 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-200 font-medium"
+        >
+          Sauvegarder les modifications
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Espace pour la barre fixe -->
+  <div *ngIf="!isLoading && categories.length > 0" class="h-20"></div>
+</div>

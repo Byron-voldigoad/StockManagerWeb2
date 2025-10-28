@@ -1,0 +1,126 @@
+<!-- Modal Formulaire Catégorie -->
+<div class="fixed inset-0 bg-amber-50/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 z-50">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto border border-amber-200 mx-auto">
+    
+    <!-- En-tête -->
+    <div class="bg-amber-50 border-b border-amber-200 p-4 sm:p-6 rounded-t-2xl sticky top-0 z-10">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg sm:text-xl font-bold text-amber-800 flex items-center gap-2 sm:gap-3">
+          <span *ngIf="category">✏️</span>
+          <span *ngIf="!category">➕</span>
+          {{ category ? 'Modifier la catégorie' : 'Nouvelle catégorie' }}
+        </h3>
+        <button 
+          (click)="onCancel()"
+          class="text-amber-500 hover:text-amber-700 text-xl sm:text-2xl transition-colors flex-shrink-0 ml-2"
+          aria-label="Fermer"
+        >
+          ×
+        </button>
+      </div>
+    </div>
+
+    <!-- Formulaire -->
+    <form (ngSubmit)="onSubmit()" class="p-4 sm:p-6 space-y-4 sm:space-y-6">
+      
+      <!-- Message d'erreur -->
+      <div *ngIf="error" class="bg-red-50 border border-red-200 rounded-lg p-3 sm:p-4">
+        <p class="text-red-700 text-xs sm:text-sm flex items-center gap-2">
+          <span class="flex-shrink-0">⚠️</span>
+          <span class="flex-1">{{ error }}</span>
+        </p>
+      </div>
+
+      <!-- Nom -->
+      <div>
+        <label class="block text-sm font-semibold text-amber-700 mb-2">
+          Nom de la catégorie *
+        </label>
+        <input
+          type="text"
+          [(ngModel)]="formData.name"
+          name="name"
+          required
+          maxlength="50"
+          class="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-amber-200 rounded-lg sm:rounded-xl focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100 transition-all text-sm sm:text-base"
+          placeholder="Ex: Meubles anciens"
+          #nameInput
+        >
+        <p class="text-amber-500 text-xs mt-1">
+          {{ formData.name.length }}/50 caractères
+        </p>
+      </div>
+
+      <!-- Couleur -->
+      <div>
+        <label class="block text-sm font-semibold text-amber-700 mb-3">
+          Couleur *
+        </label>
+        
+        <!-- Aperçu -->
+        <div class="mb-4 p-4 rounded-xl border-2 border-amber-200 text-center"
+             [style.background]="getColorClass(formData.color).background">
+          <div class="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center text-2xl"
+               [style.background]="getColorClass(formData.color).background"
+               [style.color]="getColorClass(formData.color).text">
+            🏷️
+          </div>
+          <p class="text-sm font-medium" [style.color]="getColorClass(formData.color).text">
+            {{ formData.name || 'Exemple' }}
+          </p>
+          <p class="text-xs opacity-75 mt-1" [style.color]="getColorClass(formData.color).text">
+            {{ formData.color }}
+          </p>
+        </div>
+
+        <!-- Sélecteur de couleurs -->
+        <div class="grid grid-cols-5 sm:grid-cols-6 gap-2">
+          <button
+            *ngFor="let color of availableColors"
+            type="button"
+            (click)="formData.color = color"
+            class="aspect-square rounded-lg border-2 transition-all hover:scale-105"
+            [class.border-amber-500]="formData.color === color"
+            [class.border-amber-200]="formData.color !== color"
+            [style.background]="getColorClass(color).background"
+            [title]="color"
+          >
+            <div *ngIf="formData.color === color" class="w-full h-full flex items-center justify-center">
+              <span class="text-amber-700 text-xs">✓</span>
+            </div>
+          </button>
+        </div>
+
+        <p class="text-amber-500 text-xs mt-2">
+          Choisissez une couleur pour identifier visuellement cette catégorie
+        </p>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex flex-col-reverse sm:flex-row justify-end gap-3 sm:gap-4 pt-4 sm:pt-6 border-t border-amber-200">
+        <button
+          type="button"
+          (click)="onCancel()"
+          class="px-4 sm:px-6 py-2.5 sm:py-3 border-2 border-amber-300 text-amber-700 rounded-lg sm:rounded-xl hover:bg-amber-50 transition-colors font-medium text-sm sm:text-base order-2 sm:order-1"
+        >
+          Annuler
+        </button>
+        <button
+          type="submit"
+          [disabled]="isLoading || !formData.name.trim()"
+          class="px-4 sm:px-6 py-2.5 sm:py-3 bg-amber-500 text-white rounded-lg sm:rounded-xl hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium flex items-center justify-center gap-2 shadow-lg shadow-amber-500/25 text-sm sm:text-base order-1 sm:order-2"
+        >
+          <span *ngIf="!isLoading" class="truncate">
+            {{ category ? 'Modifier' : 'Créer' }}
+          </span>
+          <span *ngIf="isLoading" class="flex items-center gap-2">
+            <div class="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-white"></div>
+            <span class="hidden xs:inline">
+              {{ category ? 'Modification...' : 'Création...' }}
+            </span>
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

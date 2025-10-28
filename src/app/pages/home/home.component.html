@@ -1,0 +1,64 @@
+<app-public-layout>
+  <!-- Hero Section avec image dynamique -->
+  <section class="relative h-[60vh] md:h-[70vh] overflow-hidden">
+    <!-- Image de fond dynamique -->
+    <div 
+      class="absolute inset-0 bg-cover bg-center bg-no-repeat"
+      [style.background-image]="getHeroBackground()"
+    >
+      <!-- Overlay pour améliorer la lisibilité -->
+      <div class="absolute inset-0 bg-gradient-to-r from-amber-900/80 to-amber-700/60 flex items-center justify-center">
+        <div class="text-center text-white px-4">
+          <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold mb-4">
+            {{ configService.getSetting('hero_title') || "Trésors d'Antan" }}
+          </h1>
+          <p class="text-xl md:text-2xl mb-8 text-amber-100">
+            {{ configService.getSetting('hero_subtitle') || "Découvrez des pièces uniques chargées d'histoire" }}
+          </p>
+          <button
+            routerLink="/produits"
+            class="bg-amber-500 hover:bg-amber-600 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-all duration-300 hover:shadow-lg"
+          >
+            {{ configService.getSetting('hero_button_text') || "Découvrir la collection" }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section produits en vedette -->
+  <section class="container mx-auto px-4 py-16">
+    <h2 class="text-4xl font-bold text-center mb-12 text-amber-800">
+      {{ configService.getSetting('featured_section_title') || "Nos Coups de Cœur" }}
+    </h2>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="flex justify-center py-12">
+      <div
+        class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-amber-200 border-t-amber-500"
+      ></div>
+    </div>
+
+    <!-- Content -->
+    <div
+      *ngIf="!isLoading"
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+    >
+      <app-product-card
+        *ngFor="let product of featuredProducts"
+        [product]="product"
+      >
+      </app-product-card>
+    </div>
+
+    <!-- Empty State -->
+    <div
+      *ngIf="!isLoading && featuredProducts.length === 0"
+      class="text-center py-12"
+    >
+      <p class="text-amber-600 text-lg">
+        {{ configService.getSetting('no_featured_products') || "Aucun produit en vedette pour le moment." }}
+      </p>
+    </div>
+  </section>
+</app-public-layout>

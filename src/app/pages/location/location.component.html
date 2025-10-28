@@ -1,0 +1,106 @@
+<app-public-layout>
+<div class="min-h-screen bg-amber-50">
+  <main class="container mx-auto px-4 py-8">
+    <!-- En-tête -->
+    <div class="mb-8">
+      <h1 class="text-4xl font-bold mb-2 text-amber-800">
+        {{ configService.getSetting('location_title') || 'Notre Localisation' }}
+      </h1>
+      <p class="text-amber-600">
+        {{ configService.getSetting('location_subtitle') || 'Venez nous rendre visite' }}
+      </p>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-8">
+      <!-- Carte Leaflet -->
+      <div class="rounded-lg overflow-hidden shadow-xl border border-amber-200 bg-white">
+        <div id="map" class="w-full aspect-video">
+          <!-- Carte Leaflet s'affichera ici -->
+        </div>
+      </div>
+
+      <!-- Informations -->
+      <div class="space-y-6">
+        <!-- Adresse -->
+        <div class="bg-white rounded-lg p-6 border border-amber-200 shadow-lg">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-2xl">📍</span>
+            <h3 class="text-xl font-bold text-amber-900">Adresse</h3>
+          </div>
+          <div class="space-y-1 text-amber-600">
+            <p class="font-medium text-amber-800">
+              {{ configService.getSetting('site_name') || 'La Brocante' }}
+            </p>
+            <p *ngFor="let line of getFormattedAddress()">{{ line }}</p>
+          </div>
+        </div>
+
+        <!-- Itinéraire dynamique -->
+        <div class="bg-white rounded-lg p-6 border border-amber-200 shadow-lg">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-2xl">🚗</span>
+            <h3 class="text-xl font-bold text-amber-900">Comment venir ?</h3>
+          </div>
+          
+          <div class="space-y-4" *ngIf="!isLoadingLocation && transportInfo.userLocation">
+            <!-- Distance et durée -->
+            <div class="grid grid-cols-2 gap-4 text-center">
+              <div class="bg-amber-50 rounded-lg p-3">
+                <p class="text-sm text-amber-600">Distance</p>
+                <p class="text-lg font-bold text-amber-800">{{ transportInfo.distance }}</p>
+              </div>
+              <div class="bg-amber-50 rounded-lg p-3">
+                <p class="text-sm text-amber-600">Temps estimé</p>
+                <p class="text-lg font-bold text-amber-800">{{ transportInfo.duration }}</p>
+              </div>
+            </div>
+
+            <!-- Recommandations -->
+            <div>
+              <p class="text-amber-700 leading-relaxed">
+                {{ transportInfo.directions }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Loading -->
+          <div *ngIf="isLoadingLocation" class="text-center py-4">
+            <div class="inline-block animate-spin rounded-full h-6 w-6 border-2 border-amber-200 border-t-amber-500"></div>
+            <p class="text-amber-600 text-sm mt-2">Détection de votre position...</p>
+          </div>
+
+          <!-- Pas de localisation -->
+          <div *ngIf="!isLoadingLocation && !transportInfo.userLocation" class="text-center py-4">
+            <p class="text-amber-600 text-sm">
+              Activez la localisation pour voir l'itinéraire depuis votre position
+            </p>
+          </div>
+        </div>
+
+        <!-- Boutons -->
+        <div class="space-y-3">
+          <a 
+            [href]="getDirectionsLink()" 
+            target="_blank"
+            class="flex items-center justify-center gap-2 w-full bg-amber-500 hover:bg-amber-600 text-white 
+                   text-center py-3 rounded-lg font-semibold transition-all duration-300"
+          >
+            <span>📍</span>
+            Itinéraire depuis ma position
+          </a>
+          
+          <a 
+            [href]="getGoogleMapsLink()" 
+            target="_blank"
+            class="flex items-center justify-center gap-2 w-full bg-white border border-amber-300 text-amber-700 hover:bg-amber-50
+                   text-center py-3 rounded-lg font-semibold transition-all duration-300"
+          >
+            <span>🗺️</span>
+            {{ configService.getSetting('view_on_maps') || 'Voir sur Google Maps' }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</app-public-layout>

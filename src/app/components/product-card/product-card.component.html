@@ -1,0 +1,48 @@
+<div 
+  class="product-card bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl cursor-pointer border border-amber-200"
+  (click)="navigateToDetail()">
+<div class="bg-white rounded-lg overflow-hidden shadow-lg 
+            hover:shadow-xl hover:scale-105 transition-all duration-300 
+            cursor-pointer border border-amber-200"
+     (click)="navigateToDetail()">
+  
+  <!-- Image du produit -->
+  <div class="relative aspect-square overflow-hidden">
+    <img 
+      [src]="product.image" 
+      [alt]="product.name" 
+      class="w-full h-full object-cover"
+    >
+    <!-- Catégorie -->
+    <span class="absolute top-3 left-3 bg-amber-100 text-amber-800 
+                 px-3 py-1 rounded-full text-sm font-medium">
+      {{ product.category }}
+    </span>
+  </div>
+  
+  <!-- Informations du produit -->
+  <div class="p-4 space-y-3">
+    <!-- Nom -->
+    <h3 class="text-lg font-semibold text-amber-900 line-clamp-2 h-14">
+      {{ product.name }}
+    </h3>
+    
+    <!-- Prix -->
+    <p class="text-2xl font-bold text-amber-600">
+      {{ product.price }} FCFA
+    </p>
+    
+    <!-- Quantité -->
+    <div class="flex items-center gap-2 text-sm text-amber-600">
+      <span>📦</span>
+      <span>Quantité : {{ product.quantity }}</span>
+    </div>
+    
+    <!-- Bouton -->
+    <button class="w-full bg-amber-500 hover:bg-amber-600 text-white 
+                   py-2 rounded-lg font-medium transition-colors duration-300">
+      Voir détails
+    </button>
+  </div>
+</div>
+</div>
