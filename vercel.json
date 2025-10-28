@@ -1,5 +1,19 @@
 {
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+  "version": 2,
+  "builds": [
+    {
+      "src": "dist/stockmanager_web/browser/**/*",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|ico|json|txt|xml))",
+      "dest": "/dist/stockmanager_web/browser/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/dist/stockmanager_web/browser/index.html"
+    }
   ]
 }
