@@ -2,18 +2,24 @@
   "version": 2,
   "builds": [
     {
-      "src": "dist/stockmanager_web/browser/**/*",
-      "use": "@vercel/static"
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist/stockmanager_web"
+      }
     }
   ],
   "routes": [
     {
-      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|ico|json|txt|xml))",
-      "dest": "/dist/stockmanager_web/browser/$1"
+      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|ico|json|txt|xml))$",
+      "headers": {
+        "cache-control": "public, max-age=31536000, immutable"
+      },
+      "dest": "/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "/dist/stockmanager_web/browser/index.html"
+      "dest": "/index.html"
     }
   ]
 }
