@@ -1,0 +1,21 @@
+<footer class="bg-amber-800 text-amber-50 border-t border-amber-700">
+  <div class="container mx-auto px-4 py-4">
+    <div class="flex flex-col sm:flex-row justify-between items-center gap-3 text-sm">
+      
+      <!-- Copyright et nom -->
+      <div class="flex items-center gap-2">
+        <span>🏺</span>
+        <span class="font-semibold">{{ configService.getSetting('site_name') || 'La Brocante' }}</span>
+        <span class="text-amber-300">© {{ currentYear }}</span>
+      </div>
+
+      <!-- Liens légaux uniquement -->
+      <div class="flex gap-4 text-amber-300">
+        <a href="#" class="hover:text-amber-50 transition-colors">Mentions légales</a>
+        <a href="#" class="hover:text-amber-50 transition-colors">Confidentialité</a>
+        <a href="#" class="hover:text-amber-50 transition-colors">CGV</a>
+      </div>
+
+    </div>
+  </div>
+</footer>
