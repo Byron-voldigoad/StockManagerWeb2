@@ -1,21 +1,21 @@
 <!-- Layout Admin SANS navigation publique -->
-<div class="min-h-screen bg-amber-50">
+<div class="min-h-screen bg-slate-50">
   <!-- Header Admin Responsive -->
-  <header class="bg-white shadow-sm border-b border-amber-200">
+  <header class="bg-white shadow-sm border-b border-slate-200">
     <div class="container mx-auto px-4 py-4">
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div class="text-center sm:text-left">
-          <h1 class="text-xl sm:text-2xl font-bold text-amber-800">
+          <h1 class="text-xl sm:text-2xl font-bold text-slate-900">
             <span *ngIf="showIcon" class="hidden sm:inline">🏺</span>
             {{ title }}
           </h1>
-          <p class="text-amber-600 text-sm sm:text-base" *ngIf="subtitle">{{ subtitle }}</p>
+          <p class="text-slate-600 text-sm sm:text-base" *ngIf="subtitle">{{ subtitle }}</p>
         </div>
         <div class="flex flex-col sm:flex-row items-center gap-3">
-          <span class="text-amber-700 text-sm text-center sm:text-left">{{ currentUser?.email }}</span>
+          <span class="text-slate-700 text-sm text-center sm:text-left">{{ currentUser?.email }}</span>
           <button 
             (click)="logout()"
-            class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg transition-colors text-sm w-full sm:w-auto"
+            class="bg-slate-500 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors text-sm w-full sm:w-auto"
           >
             Déconnexion
           </button>
@@ -25,12 +25,12 @@
   </header>
 
   <!-- Navigation Admin Responsive -->
-  <nav class="bg-amber-100 border-b border-amber-200">
+  <nav class="bg-slate-100 border-b border-slate-200">
     <div class="container mx-auto px-4">
       <div class="flex flex-wrap gap-2 sm:gap-0 sm:space-x-2 py-2 sm:py-0">
         <a 
           routerLink="/admin/dashboard" 
-          routerLinkActive="bg-amber-500 text-white"
+          routerLinkActive="bg-slate-500 text-white"
           [routerLinkActiveOptions]="{ exact: true }"
           class="flex-1 sm:flex-none text-center px-3 py-2 sm:px-4 sm:py-3 rounded-lg sm:rounded-t-lg font-medium transition-colors text-sm"
         >
@@ -40,7 +40,7 @@
         </a>
         <a 
           routerLink="/admin/products" 
-          routerLinkActive="bg-amber-500 text-white"
+          routerLinkActive="bg-slate-500 text-white"
           class="flex-1 sm:flex-none text-center px-3 py-2 sm:px-4 sm:py-3 rounded-lg sm:rounded-t-lg font-medium transition-colors text-sm"
         >
           <span class="hidden sm:inline">📦</span>
@@ -50,7 +50,7 @@
         <!-- NOUVEAU LIEN CATÉGORIES -->
         <a 
           routerLink="/admin/categories" 
-          routerLinkActive="bg-amber-500 text-white"
+          routerLinkActive="bg-slate-500 text-white"
           class="flex-1 sm:flex-none text-center px-3 py-2 sm:px-4 sm:py-3 rounded-lg sm:rounded-t-lg font-medium transition-colors text-sm"
         >
           <span class="hidden sm:inline">🏷️</span>
@@ -59,7 +59,7 @@
         </a>
         <a 
         routerLink="/admin/settings" 
-        routerLinkActive="bg-amber-500 text-white"
+        routerLinkActive="bg-slate-500 text-white"
         class="flex-1 sm:flex-none text-center px-3 py-2 sm:px-4 sm:py-3 rounded-lg sm:rounded-t-lg font-medium transition-colors text-sm"
       >
         <span class="hidden sm:inline">⚙️</span>
@@ -68,7 +68,7 @@
       </a>
         <a 
           routerLink="/" 
-          class="flex-1 sm:flex-none text-center px-3 py-2 sm:px-4 sm:py-3 rounded-lg sm:rounded-t-lg font-medium text-amber-600 hover:text-amber-800 transition-colors text-sm"
+          class="flex-1 sm:flex-none text-center px-3 py-2 sm:px-4 sm:py-3 rounded-lg sm:rounded-t-lg font-medium text-slate-600 hover:text-slate-900 transition-colors text-sm"
         >
           <span class="hidden sm:inline">👀</span>
           <span class="sm:hidden">🌐</span>

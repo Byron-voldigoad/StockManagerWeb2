@@ -7,7 +7,7 @@
     <div class="lg:hidden mb-4">
       <button 
         (click)="showAddForm = true"
-        class="w-full bg-amber-500 hover:bg-amber-600 text-white px-4 py-3 rounded-lg transition-colors flex items-center justify-center gap-2 font-medium"
+        class="w-full bg-slate-500 hover:bg-blue-700 text-white px-4 py-3 rounded-lg transition-colors flex items-center justify-center gap-2 font-medium"
       >
         <span class="text-lg">+</span>
         Ajouter un produit
@@ -15,16 +15,16 @@
     </div>
 
     <!-- Barre de recherche et filtres - RESPONSIVE -->
-    <div class="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-4 sm:mb-6 border border-amber-200">
+    <div class="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-4 sm:mb-6 border border-slate-200">
       
       <!-- En-tête desktop -->
       <div class="hidden lg:flex items-center justify-between mb-4">
         <div class="flex items-center gap-4">
-          <h3 class="text-lg font-semibold text-amber-800">Filtres et recherche</h3>
+          <h3 class="text-lg font-semibold text-slate-900">Filtres et recherche</h3>
         </div>
         <button 
           (click)="showAddForm = true"
-          class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
+          class="bg-slate-500 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
         >
           <span>+</span>
           Ajouter un produit
@@ -36,7 +36,7 @@
         
         <!-- Recherche -->
         <div class="xs:col-span-2 lg:col-span-1">
-          <label class="block text-sm font-medium text-amber-700 mb-2">
+          <label class="block text-sm font-medium text-slate-700 mb-2">
             🔍 Rechercher
           </label>
           <input
@@ -44,19 +44,19 @@
             [(ngModel)]="searchQuery"
             (input)="applyFilters()"
             placeholder="Nom du produit..."
-            class="w-full px-3 py-2.5 border border-amber-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm"
+            class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
           />
         </div>
 
         <!-- Filtre par catégorie -->
         <div>
-          <label class="block text-sm font-medium text-amber-700 mb-2">
+          <label class="block text-sm font-medium text-slate-700 mb-2">
             🏷️ Catégorie
           </label>
           <select
             [(ngModel)]="selectedCategory"
             (change)="applyFilters()"
-            class="w-full px-3 py-2.5 border border-amber-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm"
+            class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
           >
             <option value="Tous">Toutes</option>
             <option *ngFor="let category of categories" [value]="category">
@@ -67,13 +67,13 @@
 
         <!-- Tri -->
         <div>
-          <label class="block text-sm font-medium text-amber-700 mb-2">
+          <label class="block text-sm font-medium text-slate-700 mb-2">
             📊 Trier par
           </label>
           <select
             [(ngModel)]="sortBy"
             (change)="applyFilters()"
-            class="w-full px-3 py-2.5 border border-amber-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm"
+            class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
           >
             <option value="newest">Plus récent</option>
             <option value="oldest">Plus ancien</option>
@@ -85,7 +85,7 @@
 
         <!-- Compteur résultats -->
         <div class="flex items-end">
-          <div class="text-sm text-amber-600 bg-amber-50 px-3 py-2 rounded-lg w-full">
+          <div class="text-sm text-slate-600 bg-slate-50 px-3 py-2 rounded-lg w-full">
             <span class="font-semibold">{{ filteredProducts.length }}</span> 
             produit(s) trouvé(s)
           </div>
@@ -96,18 +96,18 @@
     <!-- Loading State -->
     <div *ngIf="isLoading" class="flex justify-center py-8 sm:py-12">
       <div class="text-center">
-        <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-amber-200 border-t-amber-500"></div>
-        <p class="mt-4 text-amber-600 font-medium text-sm sm:text-base">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-slate-200 border-t-blue-500"></div>
+        <p class="mt-4 text-slate-600 font-medium text-sm sm:text-base">
           Chargement des produits...
         </p>
       </div>
     </div>
 
     <!-- Liste des produits - RESPONSIVE -->
-    <div *ngIf="!isLoading" class="bg-white rounded-xl shadow-sm border border-amber-200 overflow-hidden">
+    <div *ngIf="!isLoading" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
       
       <!-- En-tête du tableau - DESKTOP -->
-      <div class="hidden lg:grid lg:grid-cols-12 gap-4 p-4 bg-amber-50 border-b border-amber-200 font-semibold text-amber-800 text-sm">
+      <div class="hidden lg:grid lg:grid-cols-12 gap-4 p-4 bg-slate-50 border-b border-slate-200 font-semibold text-slate-900 text-sm">
         <div class="col-span-1">Image</div>
         <div class="col-span-3">Nom</div>
         <div class="col-span-2">Catégorie</div>
@@ -117,9 +117,9 @@
       </div>
 
       <!-- Produits - VERSION DESKTOP -->
-      <div *ngIf="filteredProducts.length > 0" class="hidden lg:block divide-y divide-amber-100">
+      <div *ngIf="filteredProducts.length > 0" class="hidden lg:block divide-y divide-slate-100">
         <div *ngFor="let product of filteredProducts"
-             class="grid grid-cols-12 gap-4 p-4 items-center hover:bg-amber-50 transition-colors">
+             class="grid grid-cols-12 gap-4 p-4 items-center hover:bg-slate-50 transition-colors">
           
           <!-- Image -->
           <div class="col-span-1">
@@ -129,21 +129,21 @@
 
           <!-- Nom -->
           <div class="col-span-3">
-            <h3 class="font-medium text-amber-900 text-sm">{{ product.name }}</h3>
-            <p class="text-xs text-amber-600 truncate mt-1">
+            <h3 class="font-medium text-slate-900 text-sm">{{ product.name }}</h3>
+            <p class="text-xs text-slate-600 truncate mt-1">
               {{ product.description }}
             </p>
           </div>
 
           <!-- Catégorie -->
           <div class="col-span-2">
-            <span class="px-2 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-medium">
+            <span class="px-2 py-1 bg-slate-100 text-slate-900 rounded-full text-xs font-medium">
               {{ product.category }}
             </span>
           </div>
 
           <!-- Prix -->
-          <div class="col-span-2 font-semibold text-amber-700 text-sm">
+          <div class="col-span-2 font-semibold text-slate-700 text-sm">
             {{ product.price | number }} FCFA
           </div>
 
@@ -171,9 +171,9 @@
       </div>
 
       <!-- Produits - VERSION MOBILE/TABLETTE -->
-      <div *ngIf="filteredProducts.length > 0" class="lg:hidden divide-y divide-amber-100">
+      <div *ngIf="filteredProducts.length > 0" class="lg:hidden divide-y divide-slate-100">
         <div *ngFor="let product of filteredProducts"
-             class="p-4 hover:bg-amber-50 transition-colors">
+             class="p-4 hover:bg-slate-50 transition-colors">
           
           <div class="flex items-start gap-3">
             <!-- Image -->
@@ -184,10 +184,10 @@
             <div class="flex-1 min-w-0">
               <div class="flex items-start justify-between gap-2">
                 <div class="flex-1 min-w-0">
-                  <h3 class="font-semibold text-amber-900 text-sm leading-tight truncate">
+                  <h3 class="font-semibold text-slate-900 text-sm leading-tight truncate">
                     {{ product.name }}
                   </h3>
-                  <p class="text-amber-600 text-xs mt-1 line-clamp-2">
+                  <p class="text-slate-600 text-xs mt-1 line-clamp-2">
                     {{ product.description }}
                   </p>
                 </div>
@@ -209,7 +209,7 @@
 
               <!-- Métadonnées -->
               <div class="flex flex-wrap gap-2 mt-2">
-                <span class="px-2 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-medium">
+                <span class="px-2 py-1 bg-slate-100 text-slate-900 rounded-full text-xs font-medium">
                   {{ product.category }}
                 </span>
                 <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
@@ -227,16 +227,16 @@
       <!-- Empty State -->
       <div *ngIf="filteredProducts.length === 0 && !isLoading" class="text-center py-12 sm:py-16">
         <div class="text-5xl sm:text-6xl mb-4">📦</div>
-        <h3 class="text-lg sm:text-xl font-semibold text-amber-800 mb-2">
+        <h3 class="text-lg sm:text-xl font-semibold text-slate-900 mb-2">
           Aucun produit trouvé
         </h3>
-        <p class="text-amber-600 text-sm sm:text-base mb-6 max-w-md mx-auto">
+        <p class="text-slate-600 text-sm sm:text-base mb-6 max-w-md mx-auto">
           {{ searchQuery || selectedCategory !== 'Tous' ? 
               'Aucun produit ne correspond à vos critères.' : 
               'Commencez par ajouter votre premier produit !' }}
         </p>
         <button (click)="showAddForm = true"
-                class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg transition-colors font-medium">
+                class="bg-slate-500 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors font-medium">
           + Ajouter un produit
         </button>
       </div>

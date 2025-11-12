@@ -6,14 +6,14 @@
     <div class="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 lg:mb-8">
       
       <!-- Total Produits -->
-      <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 sm:p-5 lg:p-6 border border-amber-200">
+      <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 sm:p-5 lg:p-6 border border-slate-200">
         <div class="flex items-center">
-          <div class="p-2 sm:p-3 bg-amber-100 rounded-lg mr-3 sm:mr-4 flex-shrink-0">
+          <div class="p-2 sm:p-3 bg-slate-100 rounded-lg mr-3 sm:mr-4 flex-shrink-0">
             <span class="text-lg sm:text-xl lg:text-2xl">📦</span>
           </div>
           <div class="min-w-0 flex-1">
-            <p class="text-amber-600 text-xs sm:text-sm font-medium truncate">Total Produits</p>
-            <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-amber-800 mt-1">
+            <p class="text-slate-600 text-xs sm:text-sm font-medium truncate">Total Produits</p>
+            <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 mt-1">
               {{ stats.totalProducts }}
             </p>
           </div>
@@ -21,7 +21,7 @@
       </div>
 
       <!-- Stock Total -->
-      <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 sm:p-5 lg:p-6 border border-amber-200">
+      <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 sm:p-5 lg:p-6 border border-slate-200">
         <div class="flex items-center">
           <div class="p-2 sm:p-3 bg-green-100 rounded-lg mr-3 sm:mr-4 flex-shrink-0">
             <span class="text-lg sm:text-xl lg:text-2xl">🏪</span>
@@ -36,7 +36,7 @@
       </div>
 
       <!-- Valeur Stock -->
-      <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 sm:p-5 lg:p-6 border border-amber-200">
+      <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 sm:p-5 lg:p-6 border border-slate-200">
         <div class="flex items-center">
           <div class="p-2 sm:p-3 bg-blue-100 rounded-lg mr-3 sm:mr-4 flex-shrink-0">
             <span class="text-lg sm:text-xl lg:text-2xl">💰</span>
@@ -51,7 +51,7 @@
       </div>
 
       <!-- Catégories -->
-      <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 sm:p-5 lg:p-6 border border-amber-200">
+      <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 sm:p-5 lg:p-6 border border-slate-200">
         <div class="flex items-center">
           <div class="p-2 sm:p-3 bg-purple-100 rounded-lg mr-3 sm:mr-4 flex-shrink-0">
             <span class="text-lg sm:text-xl lg:text-2xl">🏷️</span>
@@ -67,17 +67,17 @@
     </div>
 
     <!-- Produits récents - RESPONSIVE -->
-    <div class="bg-white rounded-xl shadow-sm border border-amber-200 overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
       <!-- En-tête -->
-      <div class="px-4 sm:px-6 py-4 bg-amber-50 border-b border-amber-200">
+      <div class="px-4 sm:px-6 py-4 bg-slate-50 border-b border-slate-200">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <h2 class="text-lg sm:text-xl font-bold text-amber-800 flex items-center gap-2">
+          <h2 class="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-2">
             <span class="text-xl">🆕</span>
             Produits Récemment Ajoutés
           </h2>
           <button
             routerLink="/admin/products"
-            class="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-white px-4 py-2.5 rounded-lg transition-colors text-sm font-medium"
+            class="w-full sm:w-auto bg-slate-500 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg transition-colors text-sm font-medium"
           >
             Voir tous les produits
           </button>
@@ -90,7 +90,7 @@
           
           <!-- Produit - Version mobile compacte -->
           <div *ngFor="let product of recentProducts"
-               class="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 border border-amber-100 rounded-lg hover:bg-amber-50 transition-colors gap-3">
+               class="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 border border-slate-100 rounded-lg hover:bg-slate-50 transition-colors gap-3">
             
             <!-- Contenu principal -->
             <div class="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
@@ -100,10 +100,10 @@
                 class="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-lg flex-shrink-0"
               />
               <div class="min-w-0 flex-1">
-                <h3 class="font-semibold text-amber-900 text-sm sm:text-base truncate">
+                <h3 class="font-semibold text-slate-900 text-sm sm:text-base truncate">
                   {{ product.name }}
                 </h3>
-                <p class="text-amber-600 text-xs sm:text-sm mt-1">
+                <p class="text-slate-600 text-xs sm:text-sm mt-1">
                   {{ product.price | number }} FCFA • Stock: {{ product.quantity }}
                 </p>
               </div>
@@ -111,11 +111,11 @@
 
             <!-- Catégorie - Position différente sur mobile -->
             <div class="flex justify-between sm:justify-end items-center gap-2">
-              <span class="px-2 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-medium">
+              <span class="px-2 py-1 bg-slate-100 text-slate-900 rounded-full text-xs font-medium">
                 {{ product.category }}
               </span>
               <!-- Bouton action mobile optionnel -->
-              <button class="sm:hidden text-amber-500 hover:text-amber-700">
+              <button class="sm:hidden text-blue-600 hover:text-slate-700">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
@@ -128,15 +128,15 @@
         <ng-template #noProductsTemplate>
           <div class="text-center py-8 sm:py-12">
             <div class="text-4xl sm:text-5xl mb-4">📦</div>
-            <h3 class="text-lg sm:text-xl font-semibold text-amber-800 mb-2">
+            <h3 class="text-lg sm:text-xl font-semibold text-slate-900 mb-2">
               Aucun produit pour le moment
             </h3>
-            <p class="text-amber-600 text-sm sm:text-base mb-6">
+            <p class="text-slate-600 text-sm sm:text-base mb-6">
               Commencez par ajouter votre premier produit à la brocante.
             </p>
             <button
               routerLink="/admin/products"
-              class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg transition-colors font-medium"
+              class="bg-slate-500 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors font-medium"
             >
               + Ajouter votre premier produit
             </button>
@@ -150,8 +150,8 @@
   <ng-template #loadingTemplate>
     <div class="min-h-[50vh] sm:min-h-[400px] flex items-center justify-center">
       <div class="text-center">
-        <div class="inline-block animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-4 border-amber-200 border-t-amber-500"></div>
-        <p class="mt-4 text-amber-600 font-medium text-sm sm:text-base">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-4 border-slate-200 border-t-blue-500"></div>
+        <p class="mt-4 text-slate-600 font-medium text-sm sm:text-base">
           Chargement du dashboard...
         </p>
       </div>

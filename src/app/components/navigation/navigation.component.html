@@ -1,114 +1,134 @@
-<nav class="sticky top-0 z-50 bg-amber-50/80 backdrop-blur-md border-b border-amber-200">
-  <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+<nav
+  class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm"
+>
+  <div
+    class="container mx-auto px-4 py-3 md:py-4 flex items-center justify-between"
+  >
     <!-- Logo dynamique -->
-    <a 
-      routerLink="/" 
-      class="text-2xl font-bold text-amber-700 hover:text-amber-800 transition-colors flex items-center gap-2"
+    <a
+      routerLink="/"
+      class="text-xl md:text-2xl font-extrabold tracking-tight text-slate-900 hover:text-blue-600 transition-colors duration-200 flex items-center gap-2.5 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 rounded-lg px-2 py-1"
     >
-      <span>🏺</span>
-      {{ configService.getSetting('site_name') || 'La Brocante' }}
+      <span class="text-2xl">🏺</span>
+      <span class="hidden sm:inline">{{
+        configService.getSetting("site_name") || "La Brocante"
+      }}</span>
     </a>
-    
+
     <!-- Menu Desktop dynamique -->
-    <div class="hidden md:flex gap-6">
-      <a 
-        routerLink="/" 
-        routerLinkActive="text-amber-600 font-semibold" 
-        class="text-amber-800 hover:text-amber-600 transition-colors duration-300"
+    <div class="hidden md:flex items-center gap-8">
+      <a
+        routerLink="/"
+        routerLinkActive="text-blue-600 font-bold border-b-2 border-blue-600"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="text-slate-700 hover:text-blue-600 transition-colors duration-200 pb-1 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-blue-400 rounded px-1"
       >
-        {{ configService.getSetting('menu_accueil') || 'Accueil' }}
+        {{ configService.getSetting("menu_accueil") || "Accueil" }}
       </a>
-      <a 
-        routerLink="/produits" 
-        routerLinkActive="text-amber-600 font-semibold"
-        class="text-amber-800 hover:text-amber-600 transition-colors duration-300"
+      <a
+        routerLink="/produits"
+        routerLinkActive="text-blue-600 font-bold border-b-2 border-blue-600"
+        class="text-slate-700 hover:text-blue-600 transition-colors duration-200 pb-1 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-blue-400 rounded px-1"
       >
-        {{ configService.getSetting('menu_produits') || 'Produits' }}
+        {{ configService.getSetting("menu_produits") || "Produits" }}
       </a>
-      <a 
-        routerLink="/contact" 
-        routerLinkActive="text-amber-600 font-semibold"
-        class="text-amber-800 hover:text-amber-600 transition-colors duration-300"
+      <a
+        routerLink="/contact"
+        routerLinkActive="text-blue-600 font-bold border-b-2 border-blue-600"
+        class="text-slate-700 hover:text-blue-600 transition-colors duration-200 pb-1 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-blue-400 rounded px-1"
       >
-        {{ configService.getSetting('menu_contact') || 'Contact' }}
+        {{ configService.getSetting("menu_contact") || "Contact" }}
       </a>
-      <a 
-        routerLink="/localisation" 
-        routerLinkActive="text-amber-600 font-semibold"
-        class="text-amber-800 hover:text-amber-600 transition-colors duration-300"
+      <a
+        routerLink="/localisation"
+        routerLinkActive="text-blue-600 font-bold border-b-2 border-blue-600"
+        class="text-slate-700 hover:text-blue-600 transition-colors duration-200 pb-1 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-blue-400 rounded px-1"
       >
-        {{ configService.getSetting('menu_localisation') || 'Localisation' }}
+        {{ configService.getSetting("menu_localisation") || "Localisation" }}
       </a>
     </div>
 
     <!-- Menu Mobile -->
     <div class="md:hidden">
       <!-- Burger menu icon -->
-      <button 
+      <button
         (click)="toggleMobileMenu()"
-        class="text-amber-700 hover:text-amber-600 transition-colors p-2"
-        aria-label="Menu mobile"
+        class="text-slate-700 hover:text-blue-600 transition-colors p-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        [attr.aria-expanded]="isMobileMenuOpen"
+        aria-label="Toggle mobile menu"
       >
         <!-- Icône burger ou croix selon l'état -->
-        <svg 
-          *ngIf="!isMobileMenuOpen" 
-          class="w-6 h-6" 
-          fill="none" 
-          stroke="currentColor" 
+        <svg
+          *ngIf="!isMobileMenuOpen"
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
           viewBox="0 0 24 24"
+          aria-hidden="true"
         >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"
+          ></path>
         </svg>
-        <svg 
-          *ngIf="isMobileMenuOpen" 
-          class="w-6 h-6" 
-          fill="none" 
-          stroke="currentColor" 
+        <svg
+          *ngIf="isMobileMenuOpen"
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
           viewBox="0 0 24 24"
+          aria-hidden="true"
         >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          ></path>
         </svg>
       </button>
     </div>
   </div>
 
   <!-- Menu Mobile Dropdown -->
-  <div 
-    *ngIf="isMobileMenuOpen" 
-    class="md:hidden bg-white border-t border-amber-200 shadow-lg"
+  <div
+    *ngIf="isMobileMenuOpen"
+    class="md:hidden bg-white border-t border-slate-200 shadow-lg"
   >
-    <div class="container mx-auto px-4 py-4 space-y-4">
-      <a 
-        routerLink="/" 
-        routerLinkActive="text-amber-600 font-semibold"
+    <div class="container mx-auto px-4 py-4 space-y-2">
+      <a
+        routerLink="/"
+        routerLinkActive="text-blue-600 font-bold bg-blue-50"
         (click)="closeMobileMenu()"
-        class="block text-amber-800 hover:text-amber-600 transition-colors duration-300 py-2 text-lg"
+        class="block text-slate-700 hover:text-blue-600 transition-colors duration-200 py-3 px-3 text-base font-medium rounded-lg"
       >
-        {{ configService.getSetting('menu_accueil') || 'Accueil' }}
+        {{ configService.getSetting("menu_accueil") || "Accueil" }}
       </a>
-      <a 
-        routerLink="/produits" 
-        routerLinkActive="text-amber-600 font-semibold"
+      <a
+        routerLink="/produits"
+        routerLinkActive="text-blue-600 font-bold bg-blue-50"
         (click)="closeMobileMenu()"
-        class="block text-amber-800 hover:text-amber-600 transition-colors duration-300 py-2 text-lg"
+        class="block text-slate-700 hover:text-blue-600 transition-colors duration-200 py-3 px-3 text-base font-medium rounded-lg"
       >
-        {{ configService.getSetting('menu_produits') || 'Produits' }}
+        {{ configService.getSetting("menu_produits") || "Produits" }}
       </a>
-      <a 
-        routerLink="/contact" 
-        routerLinkActive="text-amber-600 font-semibold"
+      <a
+        routerLink="/contact"
+        routerLinkActive="text-blue-600 font-bold bg-blue-50"
         (click)="closeMobileMenu()"
-        class="block text-amber-800 hover:text-amber-600 transition-colors duration-300 py-2 text-lg"
+        class="block text-slate-700 hover:text-blue-600 transition-colors duration-200 py-3 px-3 text-base font-medium rounded-lg"
       >
-        {{ configService.getSetting('menu_contact') || 'Contact' }}
+        {{ configService.getSetting("menu_contact") || "Contact" }}
       </a>
-      <a 
-        routerLink="/localisation" 
-        routerLinkActive="text-amber-600 font-semibold"
+      <a
+        routerLink="/localisation"
+        routerLinkActive="text-blue-600 font-bold bg-blue-50"
         (click)="closeMobileMenu()"
-        class="block text-amber-800 hover:text-amber-600 transition-colors duration-300 py-2 text-lg"
+        class="block text-slate-700 hover:text-blue-600 transition-colors duration-200 py-3 px-3 text-base font-medium rounded-lg"
       >
-        {{ configService.getSetting('menu_localisation') || 'Localisation' }}
+        {{ configService.getSetting("menu_localisation") || "Localisation" }}
       </a>
     </div>
   </div>

@@ -1,12 +1,13 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { PriceSpacePipe } from '../../pipes/price-space.pipe';
 import { Product } from '../../services/supabase.service'; // ← Utilise la même interface
 
 @Component({
   selector: 'app-product-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, PriceSpacePipe],
   templateUrl: './product-card.component.html',
   styleUrls: ['./product-card.component.css']
 })

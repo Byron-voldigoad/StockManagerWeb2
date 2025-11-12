@@ -14,11 +14,11 @@ export interface SiteSetting {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SiteConfigService {
   private supabase: SupabaseClient = SupabaseClientService.getInstance();
-  
+
   private settings = new BehaviorSubject<Map<string, any>>(new Map());
   public settings$ = this.settings.asObservable();
 
@@ -27,54 +27,58 @@ export class SiteConfigService {
   }
 
   async loadSettings(): Promise<void> {
-  try {
-    const { data, error } = await this.supabase
-      .from('site_settings')
-      .select('*');
+    try {
+      const { data, error } = await this.supabase
+        .from('site_settings')
+        .select('*');
 
-    if (error) {
-      console.error('Erreur chargement settings:', error);
-      // Fallback: utiliser les valeurs par défaut
+      if (error) {
+        console.error('Erreur chargement settings:', error);
+        // Fallback: utiliser les valeurs par défaut
+        this.setDefaultSettings();
+        return;
+      }
+
+      console.log('Settings chargés:', data);
+
+      const settingsMap = new Map();
+      data?.forEach((setting) => {
+        settingsMap.set(setting.key, this.parseValue(setting));
+      });
+
+      this.settings.next(settingsMap);
+    } catch (err) {
+      console.error('Erreur dans loadSettings:', err);
+      // Fallback en cas d'erreur critique
       this.setDefaultSettings();
-      return;
     }
-
-    console.log('Settings chargés:', data);
-
-    const settingsMap = new Map();
-    data?.forEach(setting => {
-      settingsMap.set(setting.key, this.parseValue(setting));
-    });
-    
-    this.settings.next(settingsMap);
-  } catch (err) {
-    console.error('Erreur dans loadSettings:', err);
-    // Fallback en cas d'erreur critique
-    this.setDefaultSettings();
   }
-}
 
-// Méthode de fallback
-private setDefaultSettings(): void {
-  const defaultSettings = new Map();
-  defaultSettings.set('contact_title', 'Contactez-nous');
-  defaultSettings.set('contact_subtitle', 'Une question ? Écrivez-nous !');
-  defaultSettings.set('contact_form_title', 'Envoyez-nous un message');
-  defaultSettings.set('name_label', 'Nom');
-  defaultSettings.set('name_placeholder', 'Votre nom');
-  defaultSettings.set('email_label', 'Email');
-  defaultSettings.set('email_placeholder', 'votre@email.com');
-  defaultSettings.set('message_label', 'Message');
-  defaultSettings.set('message_placeholder', 'Votre message...');
-  defaultSettings.set('send_message', 'Envoyer le message');
-  defaultSettings.set('contact_email', 'contact@labrocante.fr');
-  defaultSettings.set('contact_phone', '+33 1 23 45 67 89');
-  defaultSettings.set('contact_address', '123 Rue des Antiquités, 75001 Paris');
-  defaultSettings.set('opening_hours_title', 'Horaires d\'ouverture');
-  defaultSettings.set('address_title', 'Notre adresse');
-  
-  this.settings.next(defaultSettings);
-}
+  // Méthode de fallback
+  private setDefaultSettings(): void {
+    const defaultSettings = new Map();
+    defaultSettings.set('contact_title', 'Contactez-nous');
+    defaultSettings.set('contact_subtitle', 'Une question ? Écrivez-nous !');
+    defaultSettings.set('contact_form_title', 'Envoyez-nous un message');
+    defaultSettings.set('name_label', 'Nom');
+    defaultSettings.set('name_placeholder', 'Votre nom');
+    defaultSettings.set('email_label', 'Email');
+    defaultSettings.set('email_placeholder', 'votre@email.com');
+    defaultSettings.set('message_label', 'Message');
+    defaultSettings.set('message_placeholder', 'Votre message...');
+    defaultSettings.set('send_message', 'Envoyer le message');
+    defaultSettings.set('contact_email', 'contact@labrocante.fr');
+    defaultSettings.set('contact_phone', '655596702');
+    defaultSettings.set('whatsapp_number', '655596702');
+    defaultSettings.set(
+      'contact_address',
+      '123 Rue des Antiquités, 75001 Paris'
+    );
+    defaultSettings.set('opening_hours_title', "Horaires d'ouverture");
+    defaultSettings.set('address_title', 'Notre adresse');
+
+    this.settings.next(defaultSettings);
+  }
 
   private parseValue(setting: any): any {
     switch (setting.type) {
@@ -96,9 +100,9 @@ private setDefaultSettings(): void {
   async updateSetting(key: string, value: string): Promise<boolean> {
     const { error } = await this.supabase
       .from('site_settings')
-      .update({ 
-        value, 
-        updated_at: new Date().toISOString() 
+      .update({
+        value,
+        updated_at: new Date().toISOString(),
       })
       .eq('key', key);
 
@@ -130,11 +134,16 @@ private setDefaultSettings(): void {
       return [];
     }
   }
-async uploadImage(file: File, bucket: string = 'site-images'): Promise<string | null> {
+  async uploadImage(
+    file: File,
+    bucket: string = 'site-images'
+  ): Promise<string | null> {
     try {
       // Générer un nom de fichier unique
       const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`;
+      const fileName = `${Math.random()
+        .toString(36)
+        .substring(2)}_${Date.now()}.${fileExt}`;
       const filePath = `${fileName}`;
 
       // Upload vers Supabase Storage
@@ -142,7 +151,7 @@ async uploadImage(file: File, bucket: string = 'site-images'): Promise<string | 
         .from(bucket)
         .upload(filePath, file, {
           cacheControl: '3600',
-          upsert: false
+          upsert: false,
         });
 
       if (error) {
@@ -151,12 +160,11 @@ async uploadImage(file: File, bucket: string = 'site-images'): Promise<string | 
       }
 
       // Récupérer l'URL publique
-      const { data: { publicUrl } } = this.supabase.storage
-        .from(bucket)
-        .getPublicUrl(filePath);
+      const {
+        data: { publicUrl },
+      } = this.supabase.storage.from(bucket).getPublicUrl(filePath);
 
       return publicUrl;
-
     } catch (error) {
       console.error('Erreur upload:', error);
       return null;
@@ -167,7 +175,11 @@ async uploadImage(file: File, bucket: string = 'site-images'): Promise<string | 
   // ... code existant ...
 
   // CORRECTION: Typage correct pour le paramètre optionnel
-  async updateSettingWithImage(key: string, value: string, imageFile?: File): Promise<boolean> {
+  async updateSettingWithImage(
+    key: string,
+    value: string,
+    imageFile?: File
+  ): Promise<boolean> {
     let finalValue = value;
 
     // Si un fichier image est fourni, l'uploader d'abord
@@ -184,5 +196,5 @@ async uploadImage(file: File, bucket: string = 'site-images'): Promise<string | 
     return await this.updateSetting(key, finalValue);
   }
 
-// ... code existant ...
+  // ... code existant ...
 }

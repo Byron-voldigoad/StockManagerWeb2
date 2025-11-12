@@ -1,48 +1,53 @@
-<div 
-  class="product-card bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl cursor-pointer border border-amber-200"
-  (click)="navigateToDetail()">
-<div class="bg-white rounded-lg overflow-hidden shadow-lg 
-            hover:shadow-xl hover:scale-105 transition-all duration-300 
-            cursor-pointer border border-amber-200"
-     (click)="navigateToDetail()">
-  
+<div
+  class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-2xl cursor-pointer border border-slate-200 hover:scale-105 transition-all duration-300 flex flex-col h-full"
+  (click)="navigateToDetail()"
+  role="button"
+  tabindex="0"
+  (keydown.enter)="navigateToDetail()"
+  (keydown.space)="navigateToDetail()"
+>
   <!-- Image du produit -->
-  <div class="relative aspect-square overflow-hidden">
-    <img 
-      [src]="product.image" 
-      [alt]="product.name" 
-      class="w-full h-full object-cover"
-    >
+  <div class="relative aspect-square overflow-hidden bg-gray-100">
+    <img
+      [src]="product.image"
+      [alt]="product.name"
+      class="w-full h-full object-cover hover:brightness-110 transition-all duration-300"
+    />
     <!-- Catégorie -->
-    <span class="absolute top-3 left-3 bg-amber-100 text-amber-800 
-                 px-3 py-1 rounded-full text-sm font-medium">
+    <span
+      class="absolute top-3 left-3 bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-semibold tracking-wide"
+    >
       {{ product.category }}
     </span>
   </div>
-  
+
   <!-- Informations du produit -->
-  <div class="p-4 space-y-3">
+  <div class="p-5 space-y-4 flex flex-col flex-grow">
     <!-- Nom -->
-    <h3 class="text-lg font-semibold text-amber-900 line-clamp-2 h-14">
+    <h3 class="text-lg font-bold text-slate-900 line-clamp-2 h-14">
       {{ product.name }}
     </h3>
-    
+
     <!-- Prix -->
-    <p class="text-2xl font-bold text-amber-600">
-      {{ product.price }} FCFA
+    <p class="text-2xl font-extrabold text-blue-600">
+      {{ product.price | priceSpace }} FCFA
     </p>
-    
+
     <!-- Quantité -->
-    <div class="flex items-center gap-2 text-sm text-amber-600">
+    <div class="flex items-center gap-2 text-sm text-slate-600 font-medium">
       <span>📦</span>
-      <span>Quantité : {{ product.quantity }}</span>
+      <span
+        >{{ product.quantity }} disponible{{
+          product.quantity > 1 ? "s" : ""
+        }}</span
+      >
     </div>
-    
+
     <!-- Bouton -->
-    <button class="w-full bg-amber-500 hover:bg-amber-600 text-white 
-                   py-2 rounded-lg font-medium transition-colors duration-300">
+    <button
+      class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white py-3 rounded-lg font-semibold transition-colors duration-200 mt-auto focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1"
+    >
       Voir détails
     </button>
   </div>
-</div>
 </div>

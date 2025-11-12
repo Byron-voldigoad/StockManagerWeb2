@@ -1,126 +1,239 @@
 <app-public-layout>
-<div class="min-h-screen bg-amber-50">
-  
-  <main class="container mx-auto px-4 py-8">
-    <!-- Loading State -->
-    <div *ngIf="isLoading" class="min-h-[60vh] flex items-center justify-center">
-      <div class="text-center">
-        <div class="inline-block animate-spin rounded-full h-16 w-16 border-4 border-amber-200 border-t-amber-500"></div>
-        <!-- MODIFICATION: Texte de chargement dynamique -->
-        <p class="mt-4 text-amber-600 font-medium">
-          {{ configService.getSetting('loading_product') || 'Chargement du trésor...' }}
-        </p>
+  <div class="min-h-screen bg-slate-50">
+    <main class="container mx-auto px-4 py-8">
+      <!-- Loading State -->
+      <div
+        *ngIf="isLoading"
+        class="min-h-[60vh] flex items-center justify-center"
+      >
+        <div class="text-center">
+          <div
+            class="inline-block animate-spin rounded-full h-16 w-16 border-4 border-slate-200 border-t-blue-500"
+          ></div>
+          <!-- MODIFICATION: Texte de chargement dynamique -->
+          <p class="mt-4 text-slate-600 font-medium">
+            {{
+              configService.getSetting("loading_product") ||
+                "Chargement du trésor..."
+            }}
+          </p>
+        </div>
       </div>
-    </div>
 
-    <!-- Error State -->
-    <div *ngIf="error && !isLoading" class="min-h-[60vh] flex items-center justify-center">
-      <div class="text-center max-w-md mx-auto p-6 bg-red-50 rounded-lg border border-red-200">
-        <div class="text-4xl mb-4">⚠️</div>
-        <!-- MODIFICATION: Titre erreur dynamique -->
-        <h3 class="text-lg font-semibold text-red-800 mb-2">
-          {{ configService.getSetting('error_title') || 'Oups !' }}
-        </h3>
-        <p class="text-red-600 mb-4">{{ error }}</p>
-        <button 
-          (click)="goBack()"
-          class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg transition-colors"
+      <!-- Error State -->
+      <div
+        *ngIf="error && !isLoading"
+        class="min-h-[60vh] flex items-center justify-center"
+      >
+        <div
+          class="text-center max-w-md mx-auto p-6 bg-red-50 rounded-lg border border-red-200"
         >
-          <!-- MODIFICATION: Bouton retour dynamique -->
-          {{ configService.getSetting('back_button') || 'Retour aux produits' }}
+          <div class="text-4xl mb-4">⚠️</div>
+          <!-- MODIFICATION: Titre erreur dynamique -->
+          <h3 class="text-lg font-semibold text-red-800 mb-2">
+            {{ configService.getSetting("error_title") || "Oups !" }}
+          </h3>
+          <p class="text-red-600 mb-4">{{ error }}</p>
+          <button
+            (click)="goBack()"
+            class="bg-slate-500 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+          >
+            <!-- MODIFICATION: Bouton retour dynamique -->
+            {{
+              configService.getSetting("back_button") || "Retour aux produits"
+            }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Content (seulement quand chargé et sans erreur) -->
+      <div *ngIf="!isLoading && !error && product">
+        <!-- Bouton retour -->
+        <button
+          (click)="goBack()"
+          class="flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-6 transition-colors"
+        >
+          <span>←</span>
+          <!-- MODIFICATION: Texte retour dynamique -->
+          {{ configService.getSetting("back_button") || "Retour aux produits" }}
         </button>
-      </div>
-    </div>
 
-    <!-- Content (seulement quand chargé et sans erreur) -->
-    <div *ngIf="!isLoading && !error && product">
-      <!-- Bouton retour -->
-      <button (click)="goBack()" 
-              class="flex items-center gap-2 text-amber-600 hover:text-amber-800 
-                     mb-6 transition-colors">
-        <span>←</span>
-        <!-- MODIFICATION: Texte retour dynamique -->
-        {{ configService.getSetting('back_button') || 'Retour aux produits' }}
-      </button>
+        <!-- Grille produit -->
+        <div class="grid md:grid-cols-2 gap-8 lg:gap-12">
+          <!-- Galerie d'images -->
+          <div class="space-y-4">
+            <!-- Image principale -->
+            <div
+              class="aspect-square rounded-lg overflow-hidden shadow-xl bg-white relative"
+            >
+              <img
+                [src]="getCurrentImage()"
+                [alt]="product.name"
+                class="w-full h-full object-cover transition-all duration-300"
+              />
+              <!-- Compteur d'images -->
+              <div
+                class="absolute top-4 right-4 bg-slate-900/80 text-white px-3 py-1 rounded-full text-sm font-medium"
+              >
+                {{ selectedImageIndex + 1 }}/{{ getProductImages().length }}
+              </div>
+              <!-- Boutons navigation (si plusieurs images) -->
+              <div
+                *ngIf="getProductImages().length > 1"
+                class="absolute inset-0 flex items-center justify-between p-4 pointer-events-none"
+              >
+                <button
+                  (click)="previousImage()"
+                  class="pointer-events-auto bg-slate-900/60 hover:bg-slate-900/80 text-white p-2 rounded-full transition-all"
+                  title="Image précédente"
+                >
+                  <svg
+                    class="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 19l-7-7 7-7"
+                    />
+                  </svg>
+                </button>
+                <button
+                  (click)="nextImage()"
+                  class="pointer-events-auto bg-slate-900/60 hover:bg-slate-900/80 text-white p-2 rounded-full transition-all"
+                  title="Image suivante"
+                >
+                  <svg
+                    class="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
 
-      <!-- Grille produit -->
-      <div class="grid md:grid-cols-2 gap-8 lg:gap-12">
-        <!-- Image avec skeleton -->
-        <div class="aspect-square rounded-lg overflow-hidden shadow-xl bg-white">
-          <img 
-            [src]="product.image" 
-            [alt]="product.name" 
-            class="w-full h-full object-cover"
-          >
-        </div>
+            <!-- Miniatures (thumbnails) -->
+            <div
+              *ngIf="getProductImages().length > 1"
+              class="grid grid-cols-3 gap-3"
+            >
+              <button
+                *ngFor="let image of getProductImages(); let i = index"
+                (click)="selectImage(i)"
+                [class.ring-2]="selectedImageIndex === i"
+                [class.ring-blue-500]="selectedImageIndex === i"
+                class="aspect-square rounded-lg overflow-hidden border-2 transition-all"
+                [class.border-blue-500]="selectedImageIndex === i"
+                [class.border-slate-200]="selectedImageIndex !== i"
+              >
+                <img
+                  [src]="image"
+                  [alt]="product.name + ' - ' + (i + 1)"
+                  class="w-full h-full object-cover hover:opacity-80 transition-opacity"
+                />
+              </button>
+            </div>
+          </div>
 
-        <!-- Détails -->
-        <div class="flex flex-col justify-center">
-          <!-- Catégorie -->
-          <span 
-            class="inline-block w-fit px-3 py-1 rounded-full text-sm font-medium mb-4"
-            [style.background]="'hsl(var(--' + product.category_color + '-100))'"
-            [style.color]="'hsl(var(--' + product.category_color + '-800))'"
-          >
-            {{ product.category }}
-          </span>
-          
-          <!-- Nom -->
-          <h1 class="text-4xl font-bold mb-4 text-amber-900">
-            {{ product.name }}
-          </h1>
-          
-          <!-- Prix -->
-          <p class="text-5xl font-bold text-amber-600 mb-6">
-            {{ product.price }} FCFA
-          </p>
-          
-          <!-- Quantité -->
-          <div class="flex items-center gap-2 mb-6 text-amber-700">
-            <span>📦</span>
-            <!-- MODIFICATION: Texte quantité dynamique -->
-            <span>
-              {{ configService.getSetting('quantity_label') || 'Quantité disponible' }} : {{ product.quantity }}
+          <!-- Détails -->
+          <div class="flex flex-col justify-center">
+            <!-- Catégorie -->
+            <span
+              class="inline-block w-fit px-3 py-1 rounded-full text-sm font-medium mb-4"
+              [style.background]="
+                'hsl(var(--' + product.category_color + '-100))'
+              "
+              [style.color]="'hsl(var(--' + product.category_color + '-800))'"
+            >
+              {{ product.category }}
             </span>
-          </div>
 
-          <!-- Description -->
-          <p class="text-lg text-amber-800/80 mb-8 leading-relaxed">
-            {{ product.description }}
-          </p>
+            <!-- Nom -->
+            <h1 class="text-4xl font-bold mb-4 text-slate-900">
+              {{ product.name }}
+            </h1>
 
-          <!-- Boutons d'action -->
-          <div class="flex gap-4">
-            <button (click)="showInterest()" 
-                    class="flex-1 bg-amber-500 hover:bg-amber-600 text-white 
-                           px-6 py-3 rounded-lg text-lg font-semibold 
-                           transition-all duration-300">
-              <!-- MODIFICATION: Bouton intérêt dynamique -->
-              {{ configService.getSetting('interest_button') || 'Je suis intéressé(e)' }}
-            </button>
-            <button routerLink="/contact"
-                    class="bg-transparent border border-amber-300 text-amber-700 
-                           hover:bg-amber-100 px-6 py-3 rounded-lg text-lg font-semibold 
-                           transition-all duration-300">
-              <!-- MODIFICATION: Bouton contact dynamique -->
-              {{ configService.getSetting('contact_button') || 'Contactez-nous' }}
-            </button>
-          </div>
-
-          <!-- Info réservation -->
-          <div class="mt-8 p-4 bg-amber-100/50 rounded-lg border border-amber-200">
-            <p class="text-sm text-amber-700">
-              💡 
-              <!-- MODIFICATION: Info réservation dynamique -->
-              <span class="font-medium">
-                {{ configService.getSetting('reservation_info_title') || "Bon à savoir" }} :
-              </span> 
-              {{ configService.getSetting('reservation_info_text') || "L'achat en ligne sera bientôt disponible. En attendant, contactez-nous pour réserver cet article." }}
+            <!-- Prix -->
+            <p class="text-5xl font-bold text-slate-600 mb-6">
+              {{ product.price | priceSpace }} FCFA
             </p>
+
+            <!-- Quantité -->
+            <div class="flex items-center gap-2 mb-6 text-slate-700">
+              <span>📦</span>
+              <!-- MODIFICATION: Texte quantité dynamique -->
+              <span>
+                {{
+                  configService.getSetting("quantity_label") ||
+                    "Quantité disponible"
+                }}
+                : {{ product.quantity }}
+              </span>
+            </div>
+
+            <!-- Description -->
+            <p class="text-lg text-slate-900/80 mb-8 leading-relaxed">
+              {{ product.description }}
+            </p>
+
+            <!-- Boutons d'action -->
+            <div class="flex gap-4">
+              <button
+                (click)="showInterest()"
+                class="flex-1 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg text-lg font-semibold transition-all duration-300 flex items-center justify-center gap-2"
+              >
+                <!-- MODIFICATION: Bouton intérêt avec WhatsApp -->
+                <span>📱</span>
+                {{
+                  configService.getSetting("interest_button") ||
+                    "Me contacter sur WhatsApp"
+                }}
+              </button>
+              <button
+                routerLink="/contact"
+                class="bg-transparent border border-slate-300 text-slate-700 hover:bg-slate-100 px-6 py-3 rounded-lg text-lg font-semibold transition-all duration-300"
+              >
+                <!-- MODIFICATION: Bouton contact dynamique -->
+                {{
+                  configService.getSetting("contact_button") || "Contactez-nous"
+                }}
+              </button>
+            </div>
+
+            <!-- Info réservation -->
+            <div
+              class="mt-8 p-4 bg-slate-100/50 rounded-lg border border-slate-200"
+            >
+              <p class="text-sm text-slate-700">
+                💡
+                <!-- MODIFICATION: Info réservation dynamique -->
+                <span class="font-medium">
+                  {{
+                    configService.getSetting("reservation_info_title") ||
+                      "Bon à savoir"
+                  }}
+                  :
+                </span>
+                {{
+                  configService.getSetting("reservation_info_text") ||
+                    "L'achat en ligne sera bientôt disponible. En attendant, contactez-nous pour réserver cet article."
+                }}
+              </p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </main>
-</div>
+    </main>
+  </div>
 </app-public-layout>

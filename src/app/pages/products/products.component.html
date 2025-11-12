@@ -1,88 +1,120 @@
 <app-public-layout>
-<div class="min-h-screen bg-amber-50">
-  <main class="container mx-auto px-4 py-8">
-    <!-- En-tête -->
-    <div class="mb-8">
-      <!-- MODIFICATION: Titre dynamique -->
-      <h1 class="text-4xl font-bold mb-2 text-amber-800">
-        {{ configService.getSetting('products_title') || 'Notre Collection' }}
-      </h1>
-      
-      <!-- MODIFICATION: Sous-titre dynamique -->
-      <p class="text-amber-600">
-        {{ configService.getSetting('products_subtitle') || 'Découvrez nos trésors vintage et antiquités' }}
-      </p>
-    </div>
+  <div class="min-h-screen bg-slate-50">
+    <main class="container mx-auto px-4 py-8">
+      <!-- En-tête -->
+      <div class="mb-8">
+        <!-- MODIFICATION: Titre dynamique -->
+        <h1 class="text-4xl font-bold mb-2 text-slate-900">
+          {{ configService.getSetting("products_title") || "Notre Collection" }}
+        </h1>
 
-   <!-- Loading State -->
-<div *ngIf="isLoading" class="min-h-[400px] flex items-center justify-center">
-  <div class="text-center">
-    <div class="inline-block animate-spin rounded-full h-16 w-16 border-4 border-amber-200 border-t-amber-500"></div>
-    <!-- MODIFICATION: Texte de chargement dynamique -->
-    <p class="mt-4 text-amber-600 font-medium">
-      {{ configService.getSetting('loading_products') || 'Chargement des trésors...' }}
-    </p>
-  </div>
-</div>
+        <!-- MODIFICATION: Sous-titre dynamique -->
+        <p class="text-slate-600">
+          {{
+            configService.getSetting("products_subtitle") ||
+              "Découvrez nos trésors vintage et antiquités"
+          }}
+        </p>
+      </div>
 
-<!-- Content -->
-<div *ngIf="!isLoading" class="min-h-screen bg-amber-50">
-  <!-- Le reste de ton code existant -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-    <app-product-card 
-      *ngFor="let product of filteredProducts" 
-      [product]="product">
-    </app-product-card>
-  </div>
+      <!-- Loading State -->
+      <div
+        *ngIf="isLoading"
+        class="min-h-[400px] flex items-center justify-center"
+      >
+        <div class="text-center">
+          <div
+            class="inline-block animate-spin rounded-full h-16 w-16 border-4 border-slate-200 border-t-blue-500"
+          ></div>
+          <!-- MODIFICATION: Texte de chargement dynamique -->
+          <p class="mt-4 text-slate-600 font-medium">
+            {{
+              configService.getSetting("loading_products") ||
+                "Chargement des trésors..."
+            }}
+          </p>
+        </div>
+      </div>
 
-  <!-- Empty State amélioré -->
-  <div *ngIf="filteredProducts.length === 0" class="text-center py-16">
-    <div class="max-w-md mx-auto">
-      <div class="text-6xl mb-4">🏺</div>
-      <!-- MODIFICATION: Titre vide dynamique -->
-      <h3 class="text-xl font-semibold text-amber-800 mb-2">
-        {{ configService.getSetting('no_products_title') || 'Aucun trésor trouvé' }}
-      </h3>
-      
-      <!-- MODIFICATION: Message vide dynamique -->
-      <p class="text-amber-600">
-        {{ searchQuery || selectedCategory !== 'Tous' ? 
-           (configService.getSetting('no_products_filtered') || 'Essayez de modifier vos critères de recherche.') : 
-           (configService.getSetting('no_products_available') || 'La collection sera bientôt disponible !') }}
-      </p>
-    </div>
-  </div>
-</div>
+      <!-- Content -->
+      <div *ngIf="!isLoading" class="min-h-screen bg-slate-50">
+        <!-- Le reste de ton code existant -->
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+        >
+          <app-product-card
+            *ngFor="let product of filteredProducts"
+            [product]="product"
+          >
+          </app-product-card>
+        </div>
 
-    <!-- Message si vide (fallback) -->
-    <div *ngIf="products.length === 0 && !isLoading && !error" class="text-center py-12">
-      <!-- MODIFICATION: Message par défaut dynamique -->
-      <p class="text-amber-600 text-lg">
-        {{ configService.getSetting('no_products_default') || 'Aucun produit disponible pour le moment.' }}
-      </p>
-    </div>
-    
-    <!-- Error State -->
-<div *ngIf="error && !isLoading" class="min-h-[400px] flex items-center justify-center">
-  <div class="text-center max-w-md mx-auto p-6 bg-red-50 rounded-lg border border-red-200">
-    <div class="text-4xl mb-4">⚠️</div>
-    <!-- MODIFICATION: Titre erreur dynamique -->
-    <h3 class="text-lg font-semibold text-red-800 mb-2">
-      {{ configService.getSetting('error_title') || 'Oups !' }}
-    </h3>
-    
-    <!-- MODIFICATION: Message erreur dynamique -->
-    <p class="text-red-600 mb-4">{{ error }}</p>
-    
-    <button 
-      (click)="loadData()"
-      class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors"
-    >
-      <!-- MODIFICATION: Bouton réessayer dynamique -->
-      {{ configService.getSetting('retry_button') || 'Réessayer' }}
-    </button>
+        <!-- Empty State amélioré -->
+        <div *ngIf="filteredProducts.length === 0" class="text-center py-16">
+          <div class="max-w-md mx-auto">
+            <div class="text-6xl mb-4">🏺</div>
+            <!-- MODIFICATION: Titre vide dynamique -->
+            <h3 class="text-xl font-semibold text-slate-900 mb-2">
+              {{
+                configService.getSetting("no_products_title") ||
+                  "Aucun trésor trouvé"
+              }}
+            </h3>
+
+            <!-- MODIFICATION: Message vide dynamique -->
+            <p class="text-slate-600">
+              {{
+                searchQuery || selectedCategory !== "Tous"
+                  ? configService.getSetting("no_products_filtered") ||
+                    "Essayez de modifier vos critères de recherche."
+                  : configService.getSetting("no_products_available") ||
+                    "La collection sera bientôt disponible !"
+              }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Message si vide (fallback) -->
+      <div
+        *ngIf="products.length === 0 && !isLoading && !error"
+        class="text-center py-12"
+      >
+        <!-- MODIFICATION: Message par défaut dynamique -->
+        <p class="text-slate-600 text-lg">
+          {{
+            configService.getSetting("no_products_default") ||
+              "Aucun produit disponible pour le moment."
+          }}
+        </p>
+      </div>
+
+      <!-- Error State -->
+      <div
+        *ngIf="error && !isLoading"
+        class="min-h-[400px] flex items-center justify-center"
+      >
+        <div
+          class="text-center max-w-md mx-auto p-6 bg-red-50 rounded-lg border border-red-200"
+        >
+          <div class="text-4xl mb-4">⚠️</div>
+          <!-- MODIFICATION: Titre erreur dynamique -->
+          <h3 class="text-lg font-semibold text-red-800 mb-2">
+            {{ configService.getSetting("error_title") || "Oups !" }}
+          </h3>
+
+          <!-- MODIFICATION: Message erreur dynamique -->
+          <p class="text-red-600 mb-4">{{ error }}</p>
+
+          <button
+            (click)="loadData()"
+            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors"
+          >
+            <!-- MODIFICATION: Bouton réessayer dynamique -->
+            {{ configService.getSetting("retry_button") || "Réessayer" }}
+          </button>
+        </div>
+      </div>
+    </main>
   </div>
-</div>
-  </main>
-</div>
 </app-public-layout>
