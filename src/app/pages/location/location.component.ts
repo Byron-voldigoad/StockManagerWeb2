@@ -16,9 +16,9 @@ import * as L from 'leaflet';
 })
 export class LocationComponent implements OnInit, AfterViewInit {
   configService = inject(SiteConfigService);
-  
+
   private map: any;
-  
+
   // Coordonnées de Yaoundé (Tropicana)
   brocanteLocation = {
     lat: 3.8480,    // Yaoundé
@@ -70,12 +70,16 @@ export class LocationComponent implements OnInit, AfterViewInit {
         maxZoom: 19
       }).addTo(this.map);
 
-      // Icône personnalisée pour éviter les problèmes
+      // Icône personnalisée avec le logo du site
+      const logoUrl = this.configService.getSetting('site_logo') || '';
+
       const customIcon = L.divIcon({
-        html: '🏺',
+        html: logoUrl
+          ? `<img src="${logoUrl}" alt="Logo" style="width: 40px; height: 40px; border-radius: 50%; border: 3px solid #3b82f6; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.3);" />`
+          : '<div style="width: 40px; height: 40px; background: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">🏺</div>',
         className: 'custom-marker',
-        iconSize: [30, 30],
-        iconAnchor: [15, 30]
+        iconSize: [40, 40],
+        iconAnchor: [20, 40]
       });
 
       // Marqueur de la brocante
@@ -107,11 +111,11 @@ export class LocationComponent implements OnInit, AfterViewInit {
         (position) => {
           const userLat = position.coords.latitude;
           const userLng = position.coords.longitude;
-          
+
           this.transportInfo.userLocation = { lat: userLat, lng: userLng };
           this.calculateRouteInfo(userLat, userLng);
           this.addUserMarker(userLat, userLng);
-          
+
           this.isLoadingLocation = false;
         },
         (error) => {
@@ -136,7 +140,7 @@ export class LocationComponent implements OnInit, AfterViewInit {
       userLat, userLng,
       this.brocanteLocation.lat, this.brocanteLocation.lng
     );
-    
+
     this.transportInfo.distance = `${distance} km`;
     this.transportInfo.duration = this.estimateTravelTime(distance);
     this.transportInfo.directions = this.generateDirections(distance);
@@ -146,11 +150,11 @@ export class LocationComponent implements OnInit, AfterViewInit {
     const R = 6371;
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = 
-      Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-      Math.sin(dLon/2) * Math.sin(dLon/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
     return distance.toFixed(1);
   }
@@ -166,7 +170,7 @@ export class LocationComponent implements OnInit, AfterViewInit {
 
   private generateDirections(distance: string): string {
     const dist = parseFloat(distance);
-    
+
     if (dist < 0.5) {
       return 'À quelques minutes à pied. Profitez de la balade !';
     } else if (dist < 2) {
@@ -208,7 +212,7 @@ export class LocationComponent implements OnInit, AfterViewInit {
 
   getDirectionsLink(): string {
     if (!this.transportInfo.userLocation) return this.getGoogleMapsLink();
-    
+
     return `https://www.google.com/maps/dir/${this.transportInfo.userLocation.lat},${this.transportInfo.userLocation.lng}/${this.brocanteLocation.lat},${this.brocanteLocation.lng}`;
   }
 }

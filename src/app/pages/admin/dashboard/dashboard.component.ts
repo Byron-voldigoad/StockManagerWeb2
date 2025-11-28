@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { SupabaseAuthService } from '../../../services/supabase-auth.service';
 import { SupabaseService, Product } from '../../../services/supabase.service';
 import { User } from '@supabase/supabase-js';
@@ -16,7 +16,7 @@ interface DashboardStats {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule,AdminLayoutComponent],
+  imports: [CommonModule, RouterModule, AdminLayoutComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
@@ -33,8 +33,9 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private authService: SupabaseAuthService,
-    private supabaseService: SupabaseService
-  ) {}
+    private supabaseService: SupabaseService,
+    private router: Router
+  ) { }
 
   async ngOnInit() {
     this.currentUser = this.authService.getCurrentUser();
@@ -62,6 +63,10 @@ export class DashboardComponent implements OnInit {
     } finally {
       this.isLoading = false;
     }
+  }
+
+  isActive(route: string): boolean {
+    return this.router.url === route || this.router.url.startsWith(route + '/');
   }
 
   logout() {

@@ -1,170 +1,210 @@
-<app-admin-layout title="📦 Gestion des Produits" subtitle="Ajouter, modifier et supprimer vos produits">
-
+<app-admin-layout title="Gestion des Produits" subtitle="Ajouter, modifier et supprimer vos produits" icon="products">
   <!-- Main Content -->
-  <main class="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
-    
+  <main class="container mx-auto px-4 py-8">
     <!-- Barre d'actions mobile -->
-    <div class="lg:hidden mb-4">
-      <button 
-        (click)="showAddForm = true"
-        class="w-full bg-slate-500 hover:bg-blue-700 text-white px-4 py-3 rounded-lg transition-colors flex items-center justify-center gap-2 font-medium"
-      >
-        <span class="text-lg">+</span>
+    <div class="lg:hidden mb-6">
+      <button (click)="showAddForm = true" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl shadow-sm transition-all active:scale-95
+flex items-center justify-center gap-2 font-medium">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
         Ajouter un produit
       </button>
     </div>
 
     <!-- Barre de recherche et filtres - RESPONSIVE -->
-    <div class="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-4 sm:mb-6 border border-slate-200">
-      
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-8">
       <!-- En-tête desktop -->
-      <div class="hidden lg:flex items-center justify-between mb-4">
-        <div class="flex items-center gap-4">
-          <h3 class="text-lg font-semibold text-slate-900">Filtres et recherche</h3>
+      <div class="hidden lg:flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-blue-50 text-blue-600 rounded-lg">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-slate-800">
+            Filtres & Recherche
+          </h3>
         </div>
-        <button 
-          (click)="showAddForm = true"
-          class="bg-slate-500 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-        >
-          <span>+</span>
+        <button (click)="showAddForm = true"
+          class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl shadow-sm hover:shadow-md transition-all active:scale-95 flex items-center gap-2 font-medium">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
           Ajouter un produit
         </button>
       </div>
 
       <!-- Grille de filtres -->
-      <div class="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <!-- Recherche -->
-        <div class="xs:col-span-2 lg:col-span-1">
-          <label class="block text-sm font-medium text-slate-700 mb-2">
-            🔍 Rechercher
+        <div class="md:col-span-2 lg:col-span-1">
+          <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+            Rechercher
           </label>
-          <input
-            type="text"
-            [(ngModel)]="searchQuery"
-            (input)="applyFilters()"
-            placeholder="Nom du produit..."
-            class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-          />
+          <div class="relative">
+            <input type="text" [(ngModel)]="searchQuery" (input)="applyFilters()" placeholder="Nom du produit..."
+              class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm" />
+            <svg class="w-5 h-5 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
         </div>
 
         <!-- Filtre par catégorie -->
         <div>
-          <label class="block text-sm font-medium text-slate-700 mb-2">
-            🏷️ Catégorie
+          <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+            Catégorie
           </label>
-          <select
-            [(ngModel)]="selectedCategory"
-            (change)="applyFilters()"
-            class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-          >
-            <option value="Tous">Toutes</option>
-            <option *ngFor="let category of categories" [value]="category">
-              {{ category }}
-            </option>
-          </select>
+          <div class="relative">
+            <select [(ngModel)]="selectedCategory" (change)="applyFilters()"
+              class="w-full pl-4 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm appearance-none cursor-pointer">
+              <option value="Tous">Toutes les catégories</option>
+              <option *ngFor="let category of categories" [value]="category">
+                {{ category }}
+              </option>
+            </select>
+            <svg class="w-5 h-5 text-slate-400 absolute right-3 top-2.5 pointer-events-none" fill="none"
+              stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
         </div>
 
         <!-- Tri -->
         <div>
-          <label class="block text-sm font-medium text-slate-700 mb-2">
-            📊 Trier par
+          <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+            Trier par
           </label>
-          <select
-            [(ngModel)]="sortBy"
-            (change)="applyFilters()"
-            class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-          >
-            <option value="newest">Plus récent</option>
-            <option value="oldest">Plus ancien</option>
-            <option value="price_asc">Prix (croissant)</option>
-            <option value="price_desc">Prix (décroissant)</option>
-            <option value="name">Nom (A-Z)</option>
-          </select>
+          <div class="relative">
+            <select [(ngModel)]="sortBy" (change)="applyFilters()"
+              class="w-full pl-4 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm appearance-none cursor-pointer">
+              <option value="newest">Plus récent</option>
+              <option value="oldest">Plus ancien</option>
+              <option value="price_asc">Prix (croissant)</option>
+              <option value="price_desc">Prix (décroissant)</option>
+              <option value="name">Nom (A-Z)</option>
+            </select>
+            <svg class="w-5 h-5 text-slate-400 absolute right-3 top-2.5 pointer-events-none" fill="none"
+              stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+            </svg>
+          </div>
         </div>
 
         <!-- Compteur résultats -->
         <div class="flex items-end">
-          <div class="text-sm text-slate-600 bg-slate-50 px-3 py-2 rounded-lg w-full">
-            <span class="font-semibold">{{ filteredProducts.length }}</span> 
-            produit(s) trouvé(s)
+          <div
+            class="w-full px-4 py-2.5 bg-blue-50 text-blue-700 rounded-xl text-sm font-medium flex items-center justify-between">
+            <span>Résultats</span>
+            <span
+              class="bg-white px-2 py-0.5 rounded-md shadow-sm text-xs font-bold text-blue-800 border border-blue-100">
+              {{ filteredProducts.length }}
+            </span>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Loading State -->
-    <div *ngIf="isLoading" class="flex justify-center py-8 sm:py-12">
-      <div class="text-center">
-        <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-slate-200 border-t-blue-500"></div>
-        <p class="mt-4 text-slate-600 font-medium text-sm sm:text-base">
-          Chargement des produits...
-        </p>
+    <div *ngIf="isLoading" class="flex flex-col items-center justify-center py-20">
+      <div class="relative">
+        <div class="w-16 h-16 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin"></div>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="w-2 h-2 bg-blue-600 rounded-full"></div>
+        </div>
       </div>
+      <p class="mt-4 text-slate-500 font-medium animate-pulse">
+        Chargement des produits...
+      </p>
     </div>
 
     <!-- Liste des produits - RESPONSIVE -->
-    <div *ngIf="!isLoading" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-      
+    <div *ngIf="!isLoading" class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
       <!-- En-tête du tableau - DESKTOP -->
-      <div class="hidden lg:grid lg:grid-cols-12 gap-4 p-4 bg-slate-50 border-b border-slate-200 font-semibold text-slate-900 text-sm">
-        <div class="col-span-1">Image</div>
-        <div class="col-span-3">Nom</div>
+      <div
+        class="hidden lg:grid lg:grid-cols-12 gap-6 p-5 bg-slate-50/80 border-b border-slate-200 font-semibold text-slate-600 text-xs uppercase tracking-wider">
+        <div class="col-span-4 pl-2">Produit</div>
         <div class="col-span-2">Catégorie</div>
         <div class="col-span-2">Prix</div>
         <div class="col-span-2">Stock</div>
-        <div class="col-span-2">Actions</div>
+        <div class="col-span-2 text-right pr-2">Actions</div>
       </div>
 
       <!-- Produits - VERSION DESKTOP -->
       <div *ngIf="filteredProducts.length > 0" class="hidden lg:block divide-y divide-slate-100">
         <div *ngFor="let product of filteredProducts"
-             class="grid grid-cols-12 gap-4 p-4 items-center hover:bg-slate-50 transition-colors">
-          
-          <!-- Image -->
-          <div class="col-span-1">
-            <img [src]="product.image" [alt]="product.name" 
-                 class="w-12 h-12 object-cover rounded-lg">
-          </div>
-
-          <!-- Nom -->
-          <div class="col-span-3">
-            <h3 class="font-medium text-slate-900 text-sm">{{ product.name }}</h3>
-            <p class="text-xs text-slate-600 truncate mt-1">
-              {{ product.description }}
-            </p>
+          class="grid grid-cols-12 gap-6 p-5 items-center hover:bg-slate-50/50 transition-all duration-200 group">
+          <!-- Image & Nom -->
+          <div class="col-span-4">
+            <div class="flex items-center gap-4">
+              <div
+                class="h-14 w-14 rounded-xl bg-slate-100 overflow-hidden relative border border-slate-200 flex-shrink-0">
+                <img [src]="product.image" [alt]="product.name"
+                  class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  onerror="this.src='assets/placeholder.png'" />
+              </div>
+              <div class="min-w-0">
+                <h3 class="font-semibold text-slate-900 text-sm truncate pr-4">
+                  {{ product.name }}
+                </h3>
+                <p class="text-xs text-slate-500 truncate mt-0.5 max-w-[250px]">
+                  {{ product.description }}
+                </p>
+              </div>
+            </div>
           </div>
 
           <!-- Catégorie -->
           <div class="col-span-2">
-            <span class="px-2 py-1 bg-slate-100 text-slate-900 rounded-full text-xs font-medium">
+            <span
+              class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
               {{ product.category }}
             </span>
           </div>
 
           <!-- Prix -->
-          <div class="col-span-2 font-semibold text-slate-700 text-sm">
-            {{ product.price | number }} FCFA
+          <div class="col-span-2">
+            <div class="font-semibold text-slate-900 text-sm">{{ product.price | number }} <span
+                class="text-slate-400 font-normal text-xs">FCFA</span></div>
           </div>
 
           <!-- Stock -->
           <div class="col-span-2">
-            <span [class]="getStockBadgeClass(product.quantity)" class="text-xs">
-              {{ product.quantity }}
-            </span>
+            <div class="flex items-center gap-2">
+              <div class="w-1.5 h-1.5 rounded-full"
+                [ngClass]="{'bg-red-500': product.quantity < 5, 'bg-emerald-500': product.quantity >= 5}"></div>
+              <span class="text-sm font-medium"
+                [ngClass]="{'text-red-600': product.quantity < 5, 'text-emerald-700': product.quantity >= 5}">
+                {{ product.quantity }} en stock
+              </span>
+            </div>
+            <div class="w-24 h-1.5 bg-slate-100 rounded-full mt-1.5 overflow-hidden">
+              <div class="h-full rounded-full transition-all duration-500"
+                [style.width.%]="(product.quantity / 50) * 100"
+                [ngClass]="{'bg-red-500': product.quantity < 5, 'bg-emerald-500': product.quantity >= 5}"></div>
+            </div>
           </div>
 
           <!-- Actions -->
-          <div class="col-span-2 flex space-x-2">
+          <div class="col-span-2 flex justify-end gap-2">
             <button (click)="editProduct(product)"
-                    class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded transition-colors flex items-center justify-center"
-                    title="Modifier">
-              <span class="text-sm">✏️</span>
+              class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Modifier">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
             </button>
             <button (click)="deleteProduct(product)"
-                    class="bg-red-500 hover:bg-red-600 text-white p-2 rounded transition-colors flex items-center justify-center"
-                    title="Supprimer">
-              <span class="text-sm">🗑️</span>
+              class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Supprimer">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
             </button>
           </div>
         </div>
@@ -172,52 +212,65 @@
 
       <!-- Produits - VERSION MOBILE/TABLETTE -->
       <div *ngIf="filteredProducts.length > 0" class="lg:hidden divide-y divide-slate-100">
-        <div *ngFor="let product of filteredProducts"
-             class="p-4 hover:bg-slate-50 transition-colors">
-          
-          <div class="flex items-start gap-3">
+        <div *ngFor="let product of filteredProducts" class="p-4 hover:bg-slate-50 transition-colors">
+          <div class="flex items-start gap-4">
             <!-- Image -->
-            <img [src]="product.image" [alt]="product.name" 
-                 class="w-16 h-16 object-cover rounded-lg flex-shrink-0">
+            <div
+              class="h-20 w-20 rounded-xl bg-slate-100 overflow-hidden relative border border-slate-200 flex-shrink-0">
+              <img [src]="product.image" [alt]="product.name" class="h-full w-full object-cover"
+                onerror="this.src='assets/placeholder.png'" />
+            </div>
 
             <!-- Contenu -->
             <div class="flex-1 min-w-0">
               <div class="flex items-start justify-between gap-2">
-                <div class="flex-1 min-w-0">
+                <div class="min-w-0">
                   <h3 class="font-semibold text-slate-900 text-sm leading-tight truncate">
                     {{ product.name }}
                   </h3>
-                  <p class="text-slate-600 text-xs mt-1 line-clamp-2">
+                  <p class="text-slate-500 text-xs mt-1 line-clamp-1">
                     {{ product.description }}
                   </p>
                 </div>
-                
-                <!-- Actions mobile -->
-                <div class="flex gap-1 flex-shrink-0">
-                  <button (click)="editProduct(product)"
-                          class="bg-blue-500 hover:bg-blue-600 text-white p-1.5 rounded transition-colors"
-                          title="Modifier">
-                    <span class="text-xs">✏️</span>
-                  </button>
-                  <button (click)="deleteProduct(product)"
-                          class="bg-red-500 hover:bg-red-600 text-white p-1.5 rounded transition-colors"
-                          title="Supprimer">
-                    <span class="text-xs">🗑️</span>
-                  </button>
+
+                <!-- Prix -->
+                <div class="font-bold text-slate-900 text-sm whitespace-nowrap">
+                  {{ product.price | number }} <span class="text-xs font-normal text-slate-500">FCFA</span>
                 </div>
               </div>
 
               <!-- Métadonnées -->
-              <div class="flex flex-wrap gap-2 mt-2">
-                <span class="px-2 py-1 bg-slate-100 text-slate-900 rounded-full text-xs font-medium">
+              <div class="flex flex-wrap items-center gap-2 mt-3">
+                <span
+                  class="px-2 py-1 bg-slate-100 text-slate-600 rounded-md text-xs font-medium border border-slate-200">
                   {{ product.category }}
                 </span>
-                <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
-                  {{ product.price | number }} FCFA
-                </span>
-                <span [class]="getStockBadgeClass(product.quantity)" class="text-xs">
+                <span class="px-2 py-1 rounded-md text-xs font-medium border" [ngClass]="{
+                    'bg-red-50 text-red-700 border-red-100': product.quantity < 5,
+                    'bg-emerald-50 text-emerald-700 border-emerald-100': product.quantity >= 5
+                  }">
                   Stock: {{ product.quantity }}
                 </span>
+              </div>
+
+              <!-- Actions -->
+              <div class="flex justify-end gap-2 mt-3 pt-3 border-t border-slate-50">
+                <button (click)="editProduct(product)"
+                  class="flex-1 py-1.5 px-3 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium hover:bg-blue-100 transition-colors flex items-center justify-center gap-1">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
+                  Modifier
+                </button>
+                <button (click)="deleteProduct(product)"
+                  class="flex-1 py-1.5 px-3 bg-red-50 text-red-600 rounded-lg text-xs font-medium hover:bg-red-100 transition-colors flex items-center justify-center gap-1">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  Supprimer
+                </button>
               </div>
             </div>
           </div>
@@ -225,31 +278,32 @@
       </div>
 
       <!-- Empty State -->
-      <div *ngIf="filteredProducts.length === 0 && !isLoading" class="text-center py-12 sm:py-16">
-        <div class="text-5xl sm:text-6xl mb-4">📦</div>
-        <h3 class="text-lg sm:text-xl font-semibold text-slate-900 mb-2">
+      <div *ngIf="filteredProducts.length === 0 && !isLoading" class="text-center py-16">
+        <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+          <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900 mb-2">
           Aucun produit trouvé
         </h3>
-        <p class="text-slate-600 text-sm sm:text-base mb-6 max-w-md mx-auto">
-          {{ searchQuery || selectedCategory !== 'Tous' ? 
-              'Aucun produit ne correspond à vos critères.' : 
-              'Commencez par ajouter votre premier produit !' }}
+        <p class="text-slate-500 mb-8 max-w-md mx-auto">
+          {{
+          searchQuery || selectedCategory !== "Tous"
+          ? "Aucun produit ne correspond à vos critères de recherche. Essayez d'autres filtres."
+          : "Votre inventaire est vide. Commencez par ajouter votre premier produit."
+          }}
         </p>
         <button (click)="showAddForm = true"
-                class="bg-slate-500 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors font-medium">
-          + Ajouter un produit
+          class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl shadow-lg shadow-blue-200 hover:shadow-xl transition-all active:scale-95 font-medium">
+          Ajouter un produit
         </button>
       </div>
     </div>
   </main>
 
   <!-- Modal Formulaire -->
-  <app-product-form
-    *ngIf="showAddForm"
-    [editingProduct]="editingProduct"
-    [categories]="categories"
-    [showForm]="showAddForm"
-    (saved)="onProductSaved($event)"
-    (cancelled)="onFormCancelled()"
-  ></app-product-form>
+  <app-product-form *ngIf="showAddForm" [editingProduct]="editingProduct" [categories]="categories"
+    [showForm]="showAddForm" (saved)="onProductSaved($event)" (cancelled)="onFormCancelled()"></app-product-form>
 </app-admin-layout>

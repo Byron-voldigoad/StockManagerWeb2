@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { SupabaseService, Product } from '../../services/supabase.service';
+import { ProductCardComponent } from '../../components/product-card/product-card.component';
 import { SiteConfigService } from '../../services/site-config.service'; // ← AJOUT
 import { Location } from '@angular/common';
 import { NavigationComponent } from '../../components/navigation/navigation.component';
@@ -14,10 +15,11 @@ import { PriceSpacePipe } from '../../pipes/price-space.pipe';
   imports: [
     CommonModule,
     RouterModule,
+    ProductCardComponent, // ← AJOUT
     NavigationComponent,
     PublicLayoutComponent,
     // Pipe pour formater les prix
-    PriceSpacePipe
+    PriceSpacePipe,
   ],
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css'],
@@ -27,6 +29,7 @@ export class ProductDetailComponent implements OnInit {
   isLoading: boolean = true;
   error: string | null = null;
   selectedImageIndex: number = 0; // Index de l'image sélectionnée dans la galerie
+  relatedProducts: Product[] = []; // Produits similaires
 
   // AJOUT: Injection du service de configuration
   configService = inject(SiteConfigService);
@@ -36,7 +39,7 @@ export class ProductDetailComponent implements OnInit {
     private supabaseService: SupabaseService,
     private location: Location,
     private router: Router
-  ) {}
+  ) { }
 
   async ngOnInit() {
     await this.getProduct();
@@ -54,10 +57,9 @@ export class ProductDetailComponent implements OnInit {
       if (product) {
         this.product = product;
         console.log('Produit chargé:', product);
-        console.log('Image1:', product.image);
-        console.log('Image2:', product.image2);
-        console.log('Image3:', product.image3);
-        console.log("Nombre total d'images:", this.getProductImages().length);
+
+        // Charger les produits similaires
+        this.loadRelatedProducts(product.category, product.id);
       } else {
         this.error = 'Produit non trouvé';
         setTimeout(() => this.router.navigate(['/produits']), 2000);
@@ -103,6 +105,10 @@ export class ProductDetailComponent implements OnInit {
     return images[this.selectedImageIndex] || '';
   }
 
+  isActive(route: string): boolean {
+    return this.router.url === route || this.router.url.startsWith(route + '/');
+  }
+
   showInterest(): void {
     if (this.product) {
       // Récupérer le numéro WhatsApp depuis la config
@@ -139,5 +145,8 @@ export class ProductDetailComponent implements OnInit {
         );
       }, 500);
     }
+  }
+  async loadRelatedProducts(category: string, currentProductId: number) {
+    this.relatedProducts = await this.supabaseService.getProductsByCategory(category, 4, currentProductId);
   }
 }

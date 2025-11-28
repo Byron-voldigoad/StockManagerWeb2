@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { SupabaseAuthService } from '../services/supabase-auth.service';
 import { User } from '@supabase/supabase-js';
 
@@ -14,15 +14,23 @@ import { User } from '@supabase/supabase-js';
 export class AdminLayoutComponent {
   @Input() title: string = 'Admin Brocante';
   @Input() subtitle: string = '';
+  @Input() icon: 'dashboard' | 'products' | 'categories' | 'settings' | 'media' = 'dashboard';
   @Input() showIcon: boolean = true;
 
   currentUser: User | null = null;
+  private router = inject(Router);
+  private authService = inject(SupabaseAuthService);
 
-  constructor(private authService: SupabaseAuthService) {
+  constructor() {
     this.currentUser = this.authService.getCurrentUser();
   }
 
   logout() {
     this.authService.signOut();
+  }
+
+  // Méthode pour vérifier si une route est active
+  isActive(route: string): boolean {
+    return this.router.url === route || this.router.url.startsWith(route + '/');
   }
 }

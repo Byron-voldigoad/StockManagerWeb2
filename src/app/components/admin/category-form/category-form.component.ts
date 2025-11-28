@@ -8,12 +8,15 @@ interface Category {
   name: string;
   color: string;
   product_count: number;
+  description?: string; // ← AJOUT
   created_at: string;
 }
 
+// CORRIGÉ : Ajouter description dans l'interface du formulaire
 interface CategoryFormData {
   name: string;
   color: string;
+  description: string; // ← AJOUT
 }
 
 @Component({
@@ -28,17 +31,19 @@ export class CategoryFormComponent implements OnChanges {
   @Output() saved = new EventEmitter<void>();
   @Output() cancelled = new EventEmitter<void>();
 
+  // CORRIGÉ : Ajouter description dans formData
   formData: CategoryFormData = {
     name: '',
-    color: 'amber'
+    color: 'amber',
+    description: '' // ← AJOUT
   };
 
   availableColors: string[] = [
-  'rouge', 'orange', 'jaune', 'vert', 'bleu', 
-  'violet', 'rose', 'marron', 'noir', 'gris',
-  'turquoise', 'corail', 'lavande', 'menthe', 'saumon',
-  'ocre', 'bordeaux', 'kaki', 'cyan', 'magenta'
-];
+    'rouge', 'orange', 'jaune', 'vert', 'bleu', 
+    'violet', 'rose', 'marron', 'noir', 'gris',
+    'turquoise', 'corail', 'lavande', 'menthe', 'saumon',
+    'ocre', 'bordeaux', 'kaki', 'cyan', 'magenta'
+  ];
 
   isLoading: boolean = false;
   error: string = '';
@@ -47,7 +52,8 @@ export class CategoryFormComponent implements OnChanges {
     if (this.category) {
       this.formData = {
         name: this.category.name,
-        color: this.category.color
+        color: this.category.color,
+        description: this.category.description || '' // ← AJOUT
       };
     } else {
       this.resetForm();
@@ -57,47 +63,38 @@ export class CategoryFormComponent implements OnChanges {
   resetForm() {
     this.formData = {
       name: '',
-      color: 'amber'
+      color: 'amber',
+      description: '' // ← AJOUT
     };
     this.error = '';
   }
 
   getColorClass(color: string): { background: string; text: string } {
-  const colorMap: { [key: string]: { background: string; text: string } } = {
-    // Couleurs VIVES et SATURÉES
-    'rouge': { background: '#fecaca', text: '#dc2626' },        // Rouge vif
-    'orange': { background: '#fdba74', text: '#ea580c' },       // Orange intense
-    'jaune': { background: '#fde047', text: '#ca8a04' },        // Jaune éclatant
-    'vert': { background: '#86efac', text: '#16a34a' },         // Vert frais
-    'bleu': { background: '#93c5fd', text: '#2563eb' },         // Bleu vif
-    'violet': { background: '#d8b4fe', text: '#9333ea' },       // Violet riche
-    'rose': { background: '#f9a8d4', text: '#db2777' },         // Rose flashy
-    
-    // Couleurs FORTES et DISTINCTES
-    'marron': { background: '#d6d3d1', text: '#78350f' },       // Marron chaleureux
-    'noir': { background: '#9ca3af', text: '#000000' },         // Noir profond
-    'gris': { background: '#d1d5db', text: '#374151' },         // Gris contrasté
-    
-    // Couleurs ÉCLATANTES supplémentaires
-    'turquoise': { background: '#5eead4', text: '#0f766e' },    // Turquoise vibrant
-    'corail': { background: '#fda4af', text: '#e11d48' },       // Corail intense
-    'lavande': { background: '#c4b5fd', text: '#7c3aed' },      // Lavande profond
-    'menthe': { background: '#6ee7b7', text: '#059669' },       // Menthe fraîche
-    'saumon': { background: '#fca5a5', text: '#b91c1c' },       // Saumon vif
-    'ocre': { background: '#fcd34d', text: '#d97706' },         // Ocre doré
-    'bordeaux': { background: '#fda4af', text: '#991b1b' },     // Bordeaux riche
-    'kaki': { background: '#a3e635', text: '#65a30d' },         // Kaki éclatant
-    'cyan': { background: '#67e8f9', text: '#0891b2' },         // Cyan électrique
-    'magenta': { background: '#f0abfc', text: '#c026d3' },      // Magenta vibrant
-    'émeraude': { background: '#34d399', text: '#047857' },     // Émeraude brillant
-    'saphir': { background: '#60a5fa', text: '#1d4ed8' },       // Saphir intense
-    'rubis': { background: '#fb7185', text: '#be123c' },        // Rubis éclatant
-    'or': { background: '#fcd34d', text: '#d97706' },           // Or brillant
-    'argent': { background: '#e5e7eb', text: '#6b7280' }        // Argent métallique
-  };
+    const colorMap: { [key: string]: { background: string; text: string } } = {
+      'rouge': { background: '#fecaca', text: '#dc2626' },
+      'orange': { background: '#fdba74', text: '#ea580c' },
+      'jaune': { background: '#fde047', text: '#ca8a04' },
+      'vert': { background: '#86efac', text: '#16a34a' },
+      'bleu': { background: '#93c5fd', text: '#2563eb' },
+      'violet': { background: '#d8b4fe', text: '#9333ea' },
+      'rose': { background: '#f9a8d4', text: '#db2777' },
+      'marron': { background: '#d6d3d1', text: '#78350f' },
+      'noir': { background: '#9ca3af', text: '#000000' },
+      'gris': { background: '#d1d5db', text: '#374151' },
+      'turquoise': { background: '#5eead4', text: '#0f766e' },
+      'corail': { background: '#fda4af', text: '#e11d48' },
+      'lavande': { background: '#c4b5fd', text: '#7c3aed' },
+      'menthe': { background: '#6ee7b7', text: '#059669' },
+      'saumon': { background: '#fca5a5', text: '#b91c1c' },
+      'ocre': { background: '#fcd34d', text: '#d97706' },
+      'bordeaux': { background: '#fda4af', text: '#991b1b' },
+      'kaki': { background: '#a3e635', text: '#65a30d' },
+      'cyan': { background: '#67e8f9', text: '#0891b2' },
+      'magenta': { background: '#f0abfc', text: '#c026d3' }
+    };
 
-  return colorMap[color] || colorMap['bleu']; // Fallback sur bleu
-}
+    return colorMap[color] || colorMap['bleu'];
+  }
 
   async onSubmit() {
     // Validation
@@ -118,17 +115,19 @@ export class CategoryFormComponent implements OnChanges {
       let success: boolean;
 
       if (this.category) {
-        // Modification
+        // CORRIGÉ : Modification avec description
         success = await this.supabaseService.updateCategory(
           this.category.id,
           this.formData.name.trim(),
-          this.formData.color
+          this.formData.color,
+          this.formData.description.trim() // ← AJOUT
         );
       } else {
-        // Création
+        // CORRIGÉ : Création avec description
         success = await this.supabaseService.createCategory(
           this.formData.name.trim(),
-          this.formData.color
+          this.formData.color,
+          this.formData.description.trim() // ← AJOUT
         );
       }
 

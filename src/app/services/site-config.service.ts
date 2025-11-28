@@ -22,6 +22,10 @@ export class SiteConfigService {
   private settings = new BehaviorSubject<Map<string, any>>(new Map());
   public settings$ = this.settings.asObservable();
 
+    // NOUVEAU : Sujet pour savoir quand le chargement est complet
+  public settingsLoaded = new BehaviorSubject<boolean>(false);
+  public settingsLoaded$ = this.settingsLoaded.asObservable();
+
   constructor() {
     this.loadSettings();
   }
@@ -36,6 +40,7 @@ export class SiteConfigService {
         console.error('Erreur chargement settings:', error);
         // Fallback: utiliser les valeurs par défaut
         this.setDefaultSettings();
+        this.settingsLoaded.next(true);
         return;
       }
 
@@ -47,6 +52,7 @@ export class SiteConfigService {
       });
 
       this.settings.next(settingsMap);
+      this.settingsLoaded.next(true);
     } catch (err) {
       console.error('Erreur dans loadSettings:', err);
       // Fallback en cas d'erreur critique

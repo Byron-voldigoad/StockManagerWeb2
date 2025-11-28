@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { SupabaseService, Product } from '../../../services/supabase.service';
 import { AdminLayoutComponent } from '../../../layouts/admin-layout.component';
-import {ProductFormComponent} from '../../../components/admin/product-form/product-form.component';
+import { ProductFormComponent } from '../../../components/admin/product-form/product-form.component';
 
 @Component({
   selector: 'app-products-management',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule,AdminLayoutComponent,ProductFormComponent],
+  imports: [CommonModule, FormsModule, RouterModule, AdminLayoutComponent, ProductFormComponent],
   templateUrl: './products-management.component.html',
   styleUrls: ['./products-management.component.css']
 })
@@ -17,16 +17,18 @@ export class ProductsManagementComponent implements OnInit {
   products: Product[] = [];
   filteredProducts: Product[] = [];
   categories: string[] = [];
-  
+
   searchQuery: string = '';
   selectedCategory: string = 'Tous';
   sortBy: string = 'newest';
-  
+
   isLoading: boolean = true;
   showAddForm: boolean = false;
   editingProduct: Product | null = null;
 
-  constructor(private supabaseService: SupabaseService) {}
+  constructor(private supabaseService: SupabaseService,
+    private router: Router
+  ) { }
 
   async ngOnInit() {
     await this.loadData();
@@ -34,17 +36,17 @@ export class ProductsManagementComponent implements OnInit {
 
   async loadData() {
     this.isLoading = true;
-    
+
     try {
       const [products, categories] = await Promise.all([
         this.supabaseService.getProducts(),
         this.supabaseService.getCategories()
       ]);
-      
+
       this.products = products;
       this.categories = categories.filter(cat => cat !== 'Tous');
       this.applyFilters();
-      
+
     } catch (error) {
       console.error('Erreur chargement:', error);
     } finally {
@@ -77,11 +79,11 @@ export class ProductsManagementComponent implements OnInit {
   sortProducts(products: Product[]): Product[] {
     switch (this.sortBy) {
       case 'newest':
-        return [...products].sort((a, b) => 
+        return [...products].sort((a, b) =>
           new Date(b.created_at || '').getTime() - new Date(a.created_at || '').getTime()
         );
       case 'oldest':
-        return [...products].sort((a, b) => 
+        return [...products].sort((a, b) =>
           new Date(a.created_at || '').getTime() - new Date(b.created_at || '').getTime()
         );
       case 'price_asc':
@@ -107,31 +109,35 @@ export class ProductsManagementComponent implements OnInit {
   }
 
   // Gestion du formulaire
-onProductSaved(product: Product) {
-  this.showAddForm = false;
-  this.editingProduct = null;
-  this.loadData(); // Recharger la liste
-}
+  onProductSaved(product: Product) {
+    this.showAddForm = false;
+    this.editingProduct = null;
+    this.loadData(); // Recharger la liste
+  }
 
-onFormCancelled() {
-  this.showAddForm = false;
-  this.editingProduct = null;
-}
+  onFormCancelled() {
+    this.showAddForm = false;
+    this.editingProduct = null;
+  }
 
-// Modifie aussi la méthode deleteProduct pour utiliser Supabase
-async deleteProduct(product: Product) {
-  if (confirm(`Êtes-vous sûr de vouloir supprimer "${product.name}" ? Cette action est irréversible.`)) {
-    try {
-      const success = await this.supabaseService.deleteProduct(product.id!);
-      if (success) {
-        await this.loadData(); // Recharger la liste
-      } else {
-        alert('Erreur lors de la suppression du produit');
+  // Modifie aussi la méthode deleteProduct pour utiliser Supabase
+  async deleteProduct(product: Product) {
+    if (confirm(`Êtes-vous sûr de vouloir supprimer "${product.name}" ? Cette action est irréversible.`)) {
+      try {
+        const success = await this.supabaseService.deleteProduct(product.id!);
+        if (success) {
+          await this.loadData(); // Recharger la liste
+        } else {
+          alert('Erreur lors de la suppression du produit');
+        }
+      } catch (error) {
+        console.error('Erreur suppression:', error);
+        alert('Erreur lors de la suppression');
       }
-    } catch (error) {
-      console.error('Erreur suppression:', error);
-      alert('Erreur lors de la suppression');
     }
   }
-}
+
+  isActive(route: string): boolean {
+    return this.router.url === route || this.router.url.startsWith(route + '/');
+  }
 }

@@ -18,28 +18,47 @@ export const routes: Routes = [
   { path: 'contact', component: ContactComponent },
   { path: 'localisation', component: LocationComponent },
 
-   // Routes admin PROTÉGÉES
+  // Pages légales
+  {
+    path: 'mentions-legales',
+    loadComponent: () => import('./pages/legal/legal-notice/legal-notice.component').then(m => m.LegalNoticeComponent)
+  },
+  {
+    path: 'confidentialite',
+    loadComponent: () => import('./pages/legal/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent)
+  },
+  {
+    path: 'cgu',
+    loadComponent: () => import('./pages/legal/terms-conditions/terms-conditions.component').then(m => m.TermsConditionsComponent)
+  },
+
+  // Routes admin PROTÉGÉES
   { path: 'admin/login', component: LoginComponent },
-  { 
-    path: 'admin/dashboard', 
+  {
+    path: 'admin/dashboard',
     component: DashboardComponent,
     canActivate: [AuthGuard] // ← Protection
   },
-  { 
-    path: 'admin/products', 
+  {
+    path: 'admin/products',
     component: ProductsManagementComponent,
     canActivate: [AuthGuard] // ← Protection
   },
-{ 
-    path: 'admin/categories', 
+  {
+    path: 'admin/categories',
     component: CategoriesManagementComponent,
     canActivate: [AuthGuard]
   },
-   { 
-    path: 'admin/settings', 
-    component: SettingsComponent, // ← CHANGEMENT ICI
-    canActivate: [AuthGuard] // ← AJOUT DE LA PROTECTION
+  {
+    path: 'admin/settings',
+    component: SettingsComponent,
+    canActivate: [AuthGuard]
   },
-  
+  {
+    path: 'admin/media',
+    loadComponent: () => import('./pages/admin/media-library/media-library.component').then(m => m.MediaLibraryComponent),
+    canActivate: [AuthGuard]
+  },
+
   { path: '**', redirectTo: '' }
 ];

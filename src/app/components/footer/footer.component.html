@@ -1,47 +1,43 @@
 <footer class="bg-slate-900 text-slate-50 border-t-4 border-blue-600 mt-12">
   <div class="container mx-auto px-4 py-8 md:py-12">
-    <div
-      class="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-slate-800"
-    >
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-slate-800">
       <!-- Branding -->
       <div class="space-y-3">
         <div class="flex items-center gap-2">
-          <span class="text-3xl">🏺</span>
+          <div *ngIf="logoUrl" class="flex items-center">
+            <img [src]="logoUrl" [alt]="configService.getSetting('site_name') || 'La Brocante'"
+              class="h-10 w-10 md:h-10 md:w-10 object-contain filter brightness-0 invert" />
+          </div>
+          <div *ngIf="!logoUrl" class="flex items-center">
+            <svg class="h-6 w-6 md:h-8 md:w-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z"
+                clip-rule="evenodd" />
+            </svg>
+          </div>
           <div>
             <h3 class="font-bold text-lg">
               {{ configService.getSetting("site_name") || "La Brocante" }}
             </h3>
             <p class="text-slate-400 text-sm">
-              Trésors d'antan, valeurs d'aujourd'hui
+              {{ configService.getSetting("footer_tagline") || "Trésors d'antan, valeurs d'aujourd'hui" }}
             </p>
           </div>
         </div>
+        <!-- Description additionnelle -->
+        <p class="text-slate-400 text-xs mt-2">
+          {{ configService.getSetting("footer_description") || "Votre brocante de confiance pour des trésors uniques" }}
+        </p>
       </div>
 
       <!-- Liens rapides -->
       <div class="space-y-3">
         <h4 class="font-bold text-slate-50">Navigation</h4>
         <nav class="flex flex-col space-y-2 text-sm">
-          <a
-            href="#"
-            class="text-slate-400 hover:text-blue-400 transition-colors"
-            >Accueil</a
-          >
-          <a
-            href="#"
-            class="text-slate-400 hover:text-blue-400 transition-colors"
-            >Produits</a
-          >
-          <a
-            href="#"
-            class="text-slate-400 hover:text-blue-400 transition-colors"
-            >Contact</a
-          >
-          <a
-            href="#"
-            class="text-slate-400 hover:text-blue-400 transition-colors"
-            >Localisation</a
-          >
+          <a routerLink="/" class="text-slate-400 hover:text-blue-400 transition-colors">Accueil</a>
+          <a routerLink="/produits" class="text-slate-400 hover:text-blue-400 transition-colors">Produits</a>
+          <a routerLink="/contact" class="text-slate-400 hover:text-blue-400 transition-colors">Contact</a>
+          <a routerLink="/localisation" class="text-slate-400 hover:text-blue-400 transition-colors">Localisation</a>
         </nav>
       </div>
 
@@ -49,21 +45,11 @@
       <div class="space-y-3">
         <h4 class="font-bold text-slate-50">Infos légales</h4>
         <nav class="flex flex-col space-y-2 text-sm">
-          <a
-            href="#"
-            class="text-slate-400 hover:text-blue-400 transition-colors"
-            >Mentions légales</a
-          >
-          <a
-            href="#"
-            class="text-slate-400 hover:text-blue-400 transition-colors"
-            >Confidentialité</a
-          >
-          <a
-            href="#"
-            class="text-slate-400 hover:text-blue-400 transition-colors"
-            >Conditions générales</a
-          >
+          <a routerLink="/mentions-legales" class="text-slate-400 hover:text-blue-400 transition-colors">Mentions
+            légales</a>
+          <a routerLink="/confidentialite"
+            class="text-slate-400 hover:text-blue-400 transition-colors">Confidentialité</a>
+          <a routerLink="/cgu" class="text-slate-400 hover:text-blue-400 transition-colors">Conditions générales</a>
         </nav>
       </div>
     </div>

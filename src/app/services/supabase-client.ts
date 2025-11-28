@@ -13,13 +13,13 @@ class SupabaseClientService {
       const storageAdapter: any =
         typeof window !== 'undefined' && window.localStorage
           ? {
-              getItem: (key: string) =>
-                Promise.resolve(window.localStorage.getItem(key)),
-              setItem: (key: string, value: string) =>
-                Promise.resolve(window.localStorage.setItem(key, value)),
-              removeItem: (key: string) =>
-                Promise.resolve(window.localStorage.removeItem(key)),
-            }
+            getItem: (key: string) =>
+              Promise.resolve(window.localStorage.getItem(key)),
+            setItem: (key: string, value: string) =>
+              Promise.resolve(window.localStorage.setItem(key, value)),
+            removeItem: (key: string) =>
+              Promise.resolve(window.localStorage.removeItem(key)),
+          }
           : undefined;
 
       this.instance = createClient(
@@ -32,9 +32,9 @@ class SupabaseClientService {
             // attempt to use navigator.locks (causing NavigatorLock errors
             // in some dev environments). This sacrifices some cross-tab
             // session persistence but avoids the LockManager noise.
-            persistSession: false,
-            detectSessionInUrl: false,
-            autoRefreshToken: false,
+            persistSession: true,
+            detectSessionInUrl: true,
+            autoRefreshToken: true,
           },
         }
       );

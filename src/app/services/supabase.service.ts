@@ -25,7 +25,8 @@ export class SupabaseService {
   client: any;
 
   constructor() {
-    this.supabase = SupabaseClientService.getInstance(); // ← Même instance
+    this.supabase = SupabaseClientService.getInstance();
+    this.client = this.supabase;
   }
 
   // Récupérer tous les produits avec leurs catégories
@@ -98,6 +99,56 @@ export class SupabaseService {
       quantity: data.quantity,
       created_at: data.created_at,
     } as Product;
+  }
+
+  // Récupérer les produits par catégorie (pour les produits similaires)
+  async getProductsByCategory(category: string, limit: number = 4, excludeId?: number): Promise<Product[]> {
+    // 1. Récupérer l'ID de la catégorie
+    const { data: catData } = await this.supabase
+      .from('categories')
+      .select('id')
+      .eq('name', category)
+      .single();
+
+    if (!catData) return [];
+
+    // 2. Récupérer les produits de cette catégorie
+    let query = this.supabase
+      .from('products')
+      .select(`
+        *,
+        categories (
+          name,
+          color
+        )
+      `)
+      .eq('category_id', catData.id)
+      .limit(limit);
+
+    if (excludeId) {
+      query = query.neq('id', excludeId);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.error('Erreur récupération produits similaires:', error);
+      return [];
+    }
+
+    return data.map((item) => ({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      description: item.description,
+      image: item.image,
+      image2: item.image2,
+      image3: item.image3,
+      category: item.categories.name,
+      category_color: item.categories.color,
+      quantity: item.quantity,
+      created_at: item.created_at,
+    })) as Product[];
   }
 
   // Récupérer les catégories uniques
@@ -301,39 +352,37 @@ export class SupabaseService {
       id: cat.id,
       name: cat.name,
       color: cat.color,
+      description: cat.description, // ← AJOUT
       product_count: cat.products.length,
       created_at: cat.created_at,
     }));
   }
 
-  async createCategory(
-    name: string,
-    color: string = 'amber'
-  ): Promise<boolean> {
-    const { error } = await this.supabase.from('categories').insert({
-      name: name.trim(),
-      color: color,
-    });
+  // Méthode createCategory
+  async createCategory(name: string, color: string, description: string = ''): Promise<boolean> {
+    const { error } = await this.supabase
+      .from('categories')
+      .insert([{
+        name,
+        color,
+        description  // ← AJOUT
+      }]);
 
     if (error) {
       console.error('Erreur création catégorie:', error);
       return false;
     }
-
     return true;
   }
 
-  async updateCategory(
-    id: number,
-    name: string,
-    color: string
-  ): Promise<boolean> {
+  // Méthode updateCategory  
+  async updateCategory(id: number, name: string, color: string, description: string = ''): Promise<boolean> {
     const { error } = await this.supabase
       .from('categories')
       .update({
-        name: name.trim(),
-        color: color,
-        updated_at: new Date().toISOString(),
+        name,
+        color,
+        description  // ← AJOUT
       })
       .eq('id', id);
 
@@ -341,7 +390,6 @@ export class SupabaseService {
       console.error('Erreur modification catégorie:', error);
       return false;
     }
-
     return true;
   }
 
@@ -366,11 +414,9 @@ export class SupabaseService {
           .map((p) => p.name)
           .join(', ');
         const remaining = products.length - 3;
-        const message = `Impossible de supprimer : ${
-          products.length
-        } produit(s) utilisent cette catégorie (${productNames}${
-          remaining > 0 ? `... et ${remaining} autres` : ''
-        })`;
+        const message = `Impossible de supprimer : ${products.length
+          } produit(s) utilisent cette catégorie (${productNames}${remaining > 0 ? `... et ${remaining} autres` : ''
+          })`;
         return { success: false, message };
       }
 
@@ -388,6 +434,104 @@ export class SupabaseService {
     } catch (error) {
       console.error('Erreur inattendue:', error);
       return { success: false, message: 'Erreur inattendue' };
+    }
+  }
+
+  // Méthodes pour la gestion du stockage (Images)
+  async listBucketFiles(bucketName: string = 'product-images'): Promise<any[]> {
+    let path = '';
+    if (bucketName === 'product-images') {
+      path = 'products';
+    }
+
+    const { data, error } = await this.supabase.storage
+      .from(bucketName)
+      .list(path, {
+        limit: 100,
+        offset: 0,
+        sortBy: { column: 'created_at', order: 'desc' },
+      });
+
+    if (error) {
+      console.error(`Erreur listing bucket ${bucketName}:`, error);
+      return [];
+    }
+
+    // Ajouter l'URL publique pour chaque fichier
+    return data
+      .filter((file) => file.name !== '.emptyFolderPlaceholder') // Filtrer les placeholders
+      .map((file) => {
+        const fullPath = path ? `${path}/${file.name}` : file.name;
+
+        const { data: { publicUrl } } = this.supabase.storage
+          .from(bucketName)
+          .getPublicUrl(fullPath);
+
+        return {
+          ...file,
+          name: fullPath, // Utiliser le chemin complet pour l'affichage et la suppression
+          shortName: file.name, // Garder le nom court pour l'affichage si besoin
+          publicUrl
+        };
+      });
+  }
+
+  async deleteBucketFile(fileName: string, bucketName: string = 'product-images'): Promise<boolean> {
+    console.log(`🗑️ Tentative de suppression: Bucket='${bucketName}', File='${fileName}'`);
+
+    // Extraire le dossier et le nom de fichier
+    const lastSlashIndex = fileName.lastIndexOf('/');
+    const folder = lastSlashIndex !== -1 ? fileName.substring(0, lastSlashIndex) : '';
+    const nameOnly = lastSlashIndex !== -1 ? fileName.substring(lastSlashIndex + 1) : fileName;
+
+    console.log(`🔍 Vérification existence: Folder='${folder}', Name='${nameOnly}'`);
+
+    const { data: searchData, error: searchError } = await this.supabase.storage
+      .from(bucketName)
+      .list(folder, {
+        limit: 1,
+        search: nameOnly
+      });
+
+    if (searchError) {
+      console.error('❌ Erreur lors de la vérification du fichier:', searchError);
+    } else if (!searchData || searchData.length === 0) {
+      console.warn(`⚠️ Fichier introuvable avant suppression: ${fileName}`);
+    } else {
+      console.log('✅ Fichier trouvé avant suppression:', searchData[0]);
+    }
+
+    const { data, error } = await this.supabase.storage
+      .from(bucketName)
+      .remove([fileName]);
+
+    if (error) {
+      console.error(`❌ Erreur suppression fichier ${fileName}:`, error);
+      return false;
+    }
+
+    if (!data || data.length === 0) {
+      console.warn(`⚠️ Echec suppression ${fileName}. Tentative avec le nom court...`);
+
+      // Fallback: Essayer de supprimer sans le dossier (au cas où le path serait différent)
+      const nameOnly = fileName.split('/').pop() || fileName;
+      if (nameOnly !== fileName) {
+        console.log(`🗑️ Tentative fallback: File='${nameOnly}'`);
+        const { data: dataFallback, error: errorFallback } = await this.supabase.storage
+          .from(bucketName)
+          .remove([nameOnly]);
+
+        if (dataFallback && dataFallback.length > 0) {
+          console.log('✅ Fichier supprimé avec succès (fallback):', dataFallback);
+          return true;
+        }
+      }
+
+      console.warn(`⚠️ Echec définitif suppression ${fileName}.`);
+      return false;
+    } else {
+      console.log('✅ Fichier supprimé avec succès:', data);
+      return true;
     }
   }
 }

@@ -10,6 +10,7 @@ interface Category {
   name: string;
   color: string;
   product_count: number;
+  description?: string; // ← AJOUT SIMPLE ICI
   created_at: string;
 }
 
@@ -148,7 +149,7 @@ export class CategoriesManagementComponent implements OnInit {
       }
     }
   }
-
+  
   onCategorySaved() {
     this.showForm = false;
     this.editingCategory = null;

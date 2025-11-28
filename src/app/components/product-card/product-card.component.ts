@@ -9,7 +9,7 @@ import { Product } from '../../services/supabase.service'; // ← Utilise la mê
   standalone: true,
   imports: [CommonModule, PriceSpacePipe],
   templateUrl: './product-card.component.html',
-  styleUrls: ['./product-card.component.css']
+  styleUrls: ['./product-card.component.css'],
 })
 export class ProductCardComponent {
   @Input() product!: Product; // ← Bien déclaré comme @Input()
@@ -18,5 +18,8 @@ export class ProductCardComponent {
 
   navigateToDetail() {
     this.router.navigate(['/produit', this.product.id]);
+  }
+  isActive(route: string): boolean {
+    return this.router.url === route || this.router.url.startsWith(route + '/');
   }
 }

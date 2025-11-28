@@ -1,53 +1,10 @@
-<div class="min-h-screen bg-slate-50">
-  <!-- Header avec bouton retour -->
-  <div class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-      <div class="flex items-center justify-between">
-        <!-- Bouton Retour -->
-        <button
-          (click)="goBack()"
-          class="flex items-center gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 px-3 py-2 rounded-lg transition-colors duration-200"
-          title="Retourner au tableau de bord"
-        >
-          <svg
-            class="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-          <span class="font-medium">Retour</span>
-        </button>
-
-        <!-- Titre -->
-        <div class="text-center flex-1">
-          <h1 class="text-3xl font-bold text-slate-900">
-            ⚙️ Configuration du Site
-          </h1>
-          <p class="text-slate-600 mt-1 text-sm">
-            Personnalisez le contenu et les textes de votre site
-          </p>
-        </div>
-
-        <!-- Espaceur pour alignement -->
-        <div class="w-20"></div>
-      </div>
-    </div>
-  </div>
-
+<app-admin-layout title="Configuration du Site" subtitle="Personnalisez le contenu et les textes de votre site"
+  icon="settings">
   <!-- Contenu principal -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Loading State -->
     <div *ngIf="isLoading" class="text-center py-12">
-      <div
-        class="animate-spin rounded-full h-12 w-12 border-4 border-slate-200 border-t-blue-500 mx-auto"
-      ></div>
+      <div class="animate-spin rounded-full h-12 w-12 border-4 border-slate-200 border-t-blue-500 mx-auto"></div>
       <p class="mt-4 text-slate-600 font-medium">
         Chargement des paramètres...
       </p>
@@ -56,19 +13,11 @@
     <!-- Contenu chargé -->
     <div *ngIf="!isLoading && categories.length > 0" class="space-y-6">
       <!-- Info d'aide -->
-      <div
-        class="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start gap-3"
-      >
-        <svg
-          class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path
-            fill-rule="evenodd"
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start gap-3">
+        <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd"
             d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-            clip-rule="evenodd"
-          />
+            clip-rule="evenodd" />
         </svg>
         <div>
           <p class="text-blue-900 font-medium">💡 Comment ça marche ?</p>
@@ -80,20 +29,13 @@
       </div>
 
       <!-- Navigation par catégories -->
-      <div
-        class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden"
-      >
+      <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
         <div class="flex overflow-x-auto">
-          <button
-            *ngFor="let category of categories"
-            (click)="selectedCategory = category"
-            [class.border-b-2]="selectedCategory === category"
-            [class.border-blue-600]="selectedCategory === category"
-            [class.bg-blue-50]="selectedCategory === category"
-            [class.text-blue-600]="selectedCategory === category"
+          <button *ngFor="let category of categories" (click)="selectedCategory = category"
+            [class.border-b-2]="selectedCategory === category" [class.border-blue-600]="selectedCategory === category"
+            [class.bg-blue-50]="selectedCategory === category" [class.text-blue-600]="selectedCategory === category"
             [class.text-slate-600]="selectedCategory !== category"
-            class="flex-shrink-0 px-6 py-4 font-medium transition-all duration-200 border-b-2 border-transparent hover:bg-slate-50"
-          >
+            class="flex-shrink-0 px-6 py-4 font-medium transition-all duration-200 border-b-2 border-transparent hover:bg-slate-50">
             {{ getCategoryLabel(category) }}
           </button>
         </div>
@@ -101,10 +43,8 @@
 
       <!-- Paramètres par catégorie -->
       <div class="space-y-4">
-        <div
-          *ngFor="let setting of getSettingsByCategory()"
-          class="bg-white rounded-lg shadow-sm border border-slate-200 hover:shadow-md transition-all duration-200"
-        >
+        <div *ngFor="let setting of getSettingsByCategory()"
+          class="bg-white rounded-lg shadow-sm border border-slate-200 hover:shadow-md transition-all duration-200">
           <!-- En-tête du paramètre -->
           <div class="p-6 border-b border-slate-100">
             <div class="flex items-start justify-between">
@@ -112,21 +52,14 @@
                 <h3 class="text-lg font-semibold text-slate-900">
                   {{ setting.description }}
                 </h3>
-                <span
-                  class="inline-block text-xs font-mono bg-slate-100 text-slate-700 px-2 py-1 rounded mt-2"
-                >
+                <span class="inline-block text-xs font-mono bg-slate-100 text-slate-700 px-2 py-1 rounded mt-2">
                   {{ setting.key }}
                 </span>
               </div>
-              <span
-                class="text-xs font-semibold px-3 py-1 rounded"
-                [class.bg-slate-100]="setting.type === 'text'"
-                [class.bg-slate-100]="setting.type === 'json'"
-                [class.bg-blue-100]="setting.type === 'image'"
-                [class.text-slate-700]="setting.type === 'text'"
-                [class.text-slate-700]="setting.type === 'json'"
-                [class.text-blue-800]="setting.type === 'image'"
-              >
+              <span class="text-xs font-semibold px-3 py-1 rounded" [class.bg-slate-100]="setting.type === 'text'"
+                [class.bg-slate-100]="setting.type === 'json'" [class.bg-blue-100]="setting.type === 'image'"
+                [class.text-slate-700]="setting.type === 'text'" [class.text-slate-700]="setting.type === 'json'"
+                [class.text-blue-800]="setting.type === 'image'">
                 {{ setting.type }}
               </span>
             </div>
@@ -139,13 +72,9 @@
               <label class="block text-sm font-medium text-slate-700">
                 Valeur actuelle :
               </label>
-              <input
-                type="text"
-                [value]="setting.value"
-                (input)="onSettingChange(setting.key, $event)"
+              <input type="text" [value]="setting.value" (input)="onSettingChange(setting.key, $event)"
                 class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"
-                placeholder="Entrez la nouvelle valeur..."
-              />
+                placeholder="Entrez la nouvelle valeur..." />
             </div>
 
             <!-- Champ image -->
@@ -156,20 +85,14 @@
 
               <!-- Aperçu de l'image actuelle -->
               <div *ngIf="setting.value" class="mb-4">
-                <img
-                  [src]="setting.value"
-                  [alt]="setting.description"
-                  class="max-w-full h-32 object-cover rounded-lg border border-slate-300"
-                />
+                <img [src]="setting.value" [alt]="setting.description"
+                  class="max-w-full h-32 object-cover rounded-lg border border-slate-300" />
                 <p class="text-xs text-slate-500 mt-1 break-all">
                   URL: {{ setting.value }}
                 </p>
               </div>
 
-              <div
-                *ngIf="!setting.value"
-                class="mb-4 p-4 bg-slate-100 rounded-lg text-center border border-slate-200"
-              >
+              <div *ngIf="!setting.value" class="mb-4 p-4 bg-slate-100 rounded-lg text-center border border-slate-200">
                 <p class="text-slate-600 text-sm font-medium">
                   Aucune image définie
                 </p>
@@ -180,12 +103,8 @@
                 <label class="block text-sm font-medium text-slate-700 mb-2">
                   Nouvelle image :
                 </label>
-                <input
-                  type="file"
-                  (change)="onImageChange(setting.key, $event)"
-                  accept="image/*"
-                  class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"
-                />
+                <input type="file" (change)="onImageChange(setting.key, $event)" accept="image/*"
+                  class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200" />
                 <p class="text-xs text-slate-500 mt-1">
                   Formats : JPG, PNG, WebP (max 5MB)
                 </p>
@@ -196,10 +115,8 @@
                 <p class="text-sm font-medium text-slate-700 mb-2">
                   Aperçu de la nouvelle image :
                 </p>
-                <img
-                  [id]="'preview-' + setting.key"
-                  class="max-w-full h-32 object-cover rounded-lg border border-blue-300"
-                />
+                <img [id]="'preview-' + setting.key"
+                  class="max-w-full h-32 object-cover rounded-lg border border-blue-300" />
               </div>
             </div>
           </div>
@@ -209,39 +126,25 @@
             <label class="block text-sm font-medium text-slate-700">
               Valeur JSON :
             </label>
-            <textarea
-              [value]="formatJson(setting.value)"
-              (input)="onSettingChange(setting.key, $event)"
-              rows="6"
+            <textarea [value]="formatJson(setting.value)" (input)="onSettingChange(setting.key, $event)" rows="6"
               class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm transition-colors duration-200"
-              placeholder='{"key": "value"}'
-            ></textarea>
+              placeholder='{"key": "value"}'></textarea>
             <p class="text-xs text-slate-500">
               Format JSON valide requis. Utilisez des guillemets doubles.
             </p>
           </div>
 
           <!-- Indicateur de modifications -->
-          <div
-            class="mt-4 flex items-center justify-between pt-4 border-t border-slate-100"
-          >
+          <div class="mt-4 flex items-center justify-between pt-4 border-t border-slate-100">
             <span class="text-xs text-slate-500">
               Modifié le : {{ setting.updated_at | date : "dd/MM/yyyy HH:mm" }}
             </span>
-            <span
-              *ngIf="hasUnsavedChangesForKey(setting.key)"
-              class="flex items-center text-sm text-orange-600 font-medium bg-orange-50 px-3 py-1 rounded-lg"
-            >
-              <svg
-                class="w-4 h-4 mr-1.5"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fill-rule="evenodd"
+            <span *ngIf="hasUnsavedChangesForKey(setting.key)"
+              class="flex items-center text-sm text-orange-600 font-medium bg-orange-50 px-3 py-1 rounded-lg">
+              <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z"
-                  clip-rule="evenodd"
-                />
+                  clip-rule="evenodd" />
               </svg>
               À sauvegarder
             </span>
@@ -249,97 +152,69 @@
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- État vide -->
-  <div
-    *ngIf="!isLoading && categories.length === 0"
-    class="bg-white rounded-lg shadow-sm border border-slate-200 p-12 text-center"
-  >
-    <svg
-      class="w-12 h-12 text-slate-400 mx-auto mb-4"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-      />
-    </svg>
-    <h3 class="text-lg font-medium text-slate-900 mb-2">
-      Aucun paramètre trouvé
-    </h3>
-    <p class="text-slate-600 mb-4">
-      La base de données ne contient pas encore de paramètres.
-    </p>
-    <p class="text-sm text-slate-500">
-      Vérifiez la console pour plus de détails.
-    </p>
-  </div>
-</div>
-
-<!-- Barre d'actions fixe en bas -->
-<div
-  *ngIf="!isLoading && categories.length > 0 && hasUnsavedChanges"
-  class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 shadow-2xl"
->
-  <div class="max-w-7xl mx-auto flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <svg
-        class="w-5 h-5 text-orange-500 animate-pulse"
-        fill="currentColor"
-        viewBox="0 0 20 20"
-      >
-        <path
-          fill-rule="evenodd"
-          d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z"
-          clip-rule="evenodd"
-        />
+    <!-- État vide -->
+    <div *ngIf="!isLoading && categories.length === 0"
+      class="bg-white rounded-lg shadow-sm border border-slate-200 p-12 text-center">
+      <svg class="w-12 h-12 text-slate-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
-      <span class="text-slate-900 font-medium">
-        {{ unsavedChangesCount }} modification(s) en attente
-      </span>
-    </div>
-
-    <div class="flex items-center gap-3">
-      <button
-        (click)="cancelChanges()"
-        class="px-6 py-2.5 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors duration-200 font-medium"
-      >
-        Annuler
-      </button>
-      <button
-        (click)="saveChanges()"
-        class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium shadow-md"
-      >
-        💾 Sauvegarder les modifications
-      </button>
+      <h3 class="text-lg font-medium text-slate-900 mb-2">
+        Aucun paramètre trouvé
+      </h3>
+      <p class="text-slate-600 mb-4">
+        La base de données ne contient pas encore de paramètres.
+      </p>
+      <p class="text-sm text-slate-500">
+        Vérifiez la console pour plus de détails.
+      </p>
     </div>
   </div>
-</div>
 
-<!-- Espacement pour la barre fixe -->
-<div
-  *ngIf="!isLoading && categories.length > 0 && hasUnsavedChanges"
-  class="h-24"
-></div>
+  <!-- Barre d'actions fixe en bas -->
+  <div *ngIf="!isLoading && categories.length > 0 && hasUnsavedChanges"
+    class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-50">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3 w-full sm:w-auto justify-center sm:justify-start">
+        <div class="bg-orange-100 p-2 rounded-full animate-pulse">
+          <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        </div>
+        <span class="text-slate-900 font-medium text-sm sm:text-base">
+          {{ unsavedChangesCount }} modification(s) en attente
+        </span>
+      </div>
 
-<!-- Message quand tout est sauvegardé -->
-<div
-  *ngIf="!isLoading && categories.length > 0 && noUnsavedChanges"
-  class="fixed bottom-4 right-4 bg-green-50 border border-green-200 rounded-lg p-4 shadow-lg flex items-center gap-2 max-w-sm"
->
-  <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-    <path
-      fill-rule="evenodd"
-      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-      clip-rule="evenodd"
-    />
-  </svg>
-  <span class="text-green-800 font-medium text-sm"
-    >Toutes les modifications sont sauvegardées ✓</span
-  >
-</div>
+      <div class="flex items-center gap-3 w-full sm:w-auto">
+        <button (click)="cancelChanges()"
+          class="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 transition-colors duration-200 font-medium text-sm sm:text-base">
+          Annuler
+        </button>
+        <button (click)="saveChanges()"
+          class="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors duration-200 font-medium shadow-lg shadow-blue-200 flex items-center justify-center gap-2 text-sm sm:text-base">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          Sauvegarder
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Espacement pour la barre fixe -->
+  <div *ngIf="!isLoading && categories.length > 0 && hasUnsavedChanges" class="h-32 sm:h-24"></div>
+
+  <!-- Message quand tout est sauvegardé -->
+  <div *ngIf="!isLoading && categories.length > 0 && noUnsavedChanges"
+    class="fixed bottom-4 right-4 bg-green-50 border border-green-200 rounded-lg p-4 shadow-lg flex items-center gap-2 max-w-sm">
+    <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+      <path fill-rule="evenodd"
+        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+        clip-rule="evenodd" />
+    </svg>
+    <span class="text-green-800 font-medium text-sm">Toutes les modifications sont sauvegardées ✓</span>
+  </div>
+</app-admin-layout>

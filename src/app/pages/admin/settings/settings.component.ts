@@ -6,11 +6,12 @@ import {
   SiteConfigService,
   SiteSetting,
 } from '../../../services/site-config.service';
+import { AdminLayoutComponent } from '../../../layouts/admin-layout.component';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AdminLayoutComponent],
   templateUrl: './settings.component.html',
 })
 export class SettingsComponent implements OnInit {
@@ -61,14 +62,15 @@ export class SettingsComponent implements OnInit {
 
   getCategoryLabel(category: string): string {
     const labels: { [key: string]: string } = {
-      hero: '🏠 Page Accueil',
-      header: '🔗 Navigation',
-      products: '📦 Page Produits',
-      contact: '📞 Page Contact',
-      contact_info: 'ℹ️ Infos Contact',
-      buttons: '🔘 Boutons',
-      seo: '🔍 SEO',
-      location: '📍 Localisation',
+      hero: 'Page Accueil',
+      products: 'Page Produits',
+      contact: 'Page Contact',
+      contact_info: 'Infos Contact',
+      buttons: 'Boutons',
+      seo: 'SEO',
+      location: 'Localisation',
+      footer: 'Pied de page',
+      general: 'Général'
     };
     return labels[category] || category;
   }

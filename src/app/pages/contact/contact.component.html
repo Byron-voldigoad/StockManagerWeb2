@@ -1,164 +1,173 @@
 <app-public-layout>
-<div class="min-h-screen bg-slate-50">
-  <main class="container mx-auto px-4 py-8">
-    <!-- En-tête -->
-    <div class="mb-8">
-      <!-- MODIFICATION: Titre dynamique -->
-      <h1 class="text-4xl font-bold mb-2 text-slate-900">
-        {{ configService.getSetting('contact_title') || 'Contactez-nous' }}
-      </h1>
-      
-      <!-- MODIFICATION: Sous-titre dynamique -->
-      <p class="text-slate-600">
-        {{ configService.getSetting('contact_subtitle') || 'Une question ? Écrivez-nous !' }}
-      </p>
-    </div>
+  <div class="min-h-screen bg-slate-50">
+    <main class="container mx-auto px-4 py-8">
+      <!-- En-tête -->
+      <div class="mb-8">
+        <!-- MODIFICATION: Titre dynamique -->
+        <h1 class="text-4xl font-bold mb-2 text-slate-900">
+          {{ configService.getSetting('contact_title') || 'Contactez-nous' }}
+        </h1>
 
-    <div class="grid lg:grid-cols-2 gap-8">
-      <!-- Formulaire -->
-      <div class="bg-white rounded-lg p-6 border border-slate-200 shadow-lg">
-        <!-- MODIFICATION: Titre formulaire dynamique -->
-        <h2 class="text-2xl font-bold mb-6 text-slate-900">
-          {{ configService.getSetting('contact_form_title') || 'Envoyez-nous un message' }}
-        </h2>
-        
-        <form class="space-y-4">
-          <!-- Nom -->
-          <div>
-            <!-- MODIFICATION: Label nom dynamique -->
-            <label class="block text-sm font-medium mb-2 text-slate-700">
-              {{ configService.getSetting('name_label') || 'Nom' }}
-            </label>
-            <input 
-              class="w-full px-4 py-2 rounded-lg border border-slate-300 
+        <!-- MODIFICATION: Sous-titre dynamique -->
+        <p class="text-slate-600">
+          {{ configService.getSetting('contact_subtitle') || 'Une question ? Écrivez-nous !' }}
+        </p>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-8">
+        <!-- Formulaire -->
+        <div class="bg-white rounded-lg p-6 border border-slate-200 shadow-lg">
+          <!-- MODIFICATION: Titre formulaire dynamique -->
+          <h2 class="text-2xl font-bold mb-6 text-slate-900">
+            {{ configService.getSetting('contact_form_title') || 'Envoyez-nous un message' }}
+          </h2>
+
+          <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="space-y-4">
+            <!-- Message de succès -->
+            <div *ngIf="submitSuccess"
+              class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg flex items-center gap-2">
+              <span>✅</span>
+              <span>Votre client email va s'ouvrir avec le message pré-rempli !</span>
+            </div>
+
+            <!-- Nom -->
+            <div>
+              <label class="block text-sm font-medium mb-2 text-slate-700">
+                {{ configService.getSetting('name_label') || 'Nom' }}
+              </label>
+              <input formControlName="name" class="w-full px-4 py-2 rounded-lg border border-slate-300 
                      bg-slate-50 focus:ring-2 focus:ring-blue-500 
                      focus:border-transparent transition-all"
-             
-              [placeholder]="configService.getSetting('name_placeholder') || 'Votre nom'"
-            >
-          </div>
-          
-          <!-- Email -->
-          <div>
-            <!-- MODIFICATION: Label email dynamique -->
-            <label class="block text-sm font-medium mb-2 text-slate-700">
-              {{ configService.getSetting('email_label') || 'Email' }}
-            </label>
-            <input 
-              type="email"
-              class="w-full px-4 py-2 rounded-lg border border-slate-300 
+                [placeholder]="configService.getSetting('name_placeholder') || 'Votre nom'">
+              <p *ngIf="contactForm.get('name')?.invalid && contactForm.get('name')?.touched"
+                class="text-red-600 text-sm mt-1">
+                Le nom est requis (minimum 2 caractères)
+              </p>
+            </div>
+
+            <!-- Email -->
+            <div>
+              <label class="block text-sm font-medium mb-2 text-slate-700">
+                {{ configService.getSetting('email_label') || 'Email' }}
+              </label>
+              <input type="email" formControlName="email" class="w-full px-4 py-2 rounded-lg border border-slate-300 
                      bg-slate-50 focus:ring-2 focus:ring-blue-500 
                      focus:border-transparent transition-all"
-              [placeholder]="configService.getSetting('email_placeholder') || 'votre@email.com'"
-            >
-          </div>
-          
-          <!-- Message -->
-          <div>
-            <!-- MODIFICATION: Label message dynamique -->
-            <label class="block text-sm font-medium mb-2 text-slate-700">
-              {{ configService.getSetting('message_label') || 'Message' }}
-            </label>
-            <textarea 
-              rows="5"
-              class="w-full px-4 py-2 rounded-lg border border-slate-300 
+                [placeholder]="configService.getSetting('email_placeholder') || 'votre@email.com'">
+              <p *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched"
+                class="text-red-600 text-sm mt-1">
+                Email valide requis
+              </p>
+            </div>
+
+            <!-- Message -->
+            <div>
+              <label class="block text-sm font-medium mb-2 text-slate-700">
+                {{ configService.getSetting('message_label') || 'Message' }}
+              </label>
+              <textarea formControlName="message" rows="5" class="w-full px-4 py-2 rounded-lg border border-slate-300 
                      bg-slate-50 focus:ring-2 focus:ring-blue-500 
                      focus:border-transparent transition-all resize-none"
-              [placeholder]="configService.getSetting('message_placeholder') || 'Votre message...'"
-            ></textarea>
-          </div>
-          
-          <!-- Bouton -->
-          <button 
-            type="submit"
-            class="w-full bg-slate-500 hover:bg-blue-700 text-white 
-                   py-3 rounded-lg font-semibold transition-all duration-300"
-          >
-            <!-- MODIFICATION: Bouton envoyer dynamique -->
-            {{ configService.getSetting('send_message') || 'Envoyer le message' }}
-          </button>
-        </form>
-      </div>
+                [placeholder]="configService.getSetting('message_placeholder') || 'Votre message...'"></textarea>
+              <p *ngIf="contactForm.get('message')?.invalid && contactForm.get('message')?.touched"
+                class="text-red-600 text-sm mt-1">
+                Message requis (minimum 10 caractères)
+              </p>
+            </div>
 
-      <!-- Informations de contact -->
-      <div class="space-y-6">
-        <!-- Email -->
-        <div class="bg-white rounded-lg p-6 border border-slate-200 shadow-lg">
-          <div class="flex items-center gap-2 mb-3">
-            <span class="text-2xl">📧</span>
-            <h3 class="text-xl font-bold text-slate-900">Email</h3>
-          </div>
-          <a 
-            [href]="'mailto:' + (configService.getSetting('contact_email') || 'contact@labrocante.fr')" 
-            class="text-slate-600 hover:text-slate-900 hover:underline"
-          >
-            <!-- MODIFICATION: Email dynamique -->
-            {{ configService.getSetting('contact_email') || 'contact@labrocante.fr' }}
-          </a>
+            <!-- Boutons -->
+            <div class="space-y-3">
+              <!-- Bouton Email -->
+              <button type="submit" [disabled]="isSubmitting" class="w-full bg-blue-600 hover:bg-blue-700 text-white 
+                     py-3 rounded-lg font-semibold transition-all duration-300
+                     disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                <span>📧</span>
+                {{ configService.getSetting('send_message') || 'Envoyer par Email' }}
+              </button>
+
+              <!-- Bouton WhatsApp -->
+              <button type="button" (click)="sendViaWhatsApp()" class="w-full bg-green-600 hover:bg-green-700 text-white 
+                     py-3 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center gap-2">
+                <span>📱</span>
+                Envoyer via WhatsApp
+              </button>
+            </div>
+          </form>
         </div>
 
-        <!-- Téléphone -->
-        <div class="bg-white rounded-lg p-6 border border-slate-200 shadow-lg">
-          <div class="flex items-center gap-2 mb-3">
-            <span class="text-2xl">📞</span>
-            <h3 class="text-xl font-bold text-slate-900">Téléphone</h3>
+        <!-- Informations de contact -->
+        <div class="space-y-6">
+          <!-- Email -->
+          <div class="bg-white rounded-lg p-6 border border-slate-200 shadow-lg">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="text-2xl">📧</span>
+              <h3 class="text-xl font-bold text-slate-900">Email</h3>
+            </div>
+            <a [href]="'mailto:' + (configService.getSetting('contact_email') || 'contact@labrocante.fr')"
+              class="text-slate-600 hover:text-slate-900 hover:underline">
+              <!-- MODIFICATION: Email dynamique -->
+              {{ configService.getSetting('contact_email') || 'contact@labrocante.fr' }}
+            </a>
           </div>
-          <a 
-            [href]="'tel:' + (configService.getSetting('contact_phone') || '+33123456789')" 
-            class="text-slate-600 hover:text-slate-900 hover:underline"
-          >
-            <!-- MODIFICATION: Téléphone dynamique -->
-            {{ configService.getSetting('contact_phone') || '+33 1 23 45 67 89' }}
-          </a>
-        </div>
 
-        <!-- Horaires -->
-        <!-- ... reste du code inchangé ... -->
-
-        <!-- Horaires -->
-        <div class="bg-white rounded-lg p-6 border border-slate-200 shadow-lg">
-          <div class="flex items-center gap-2 mb-4">
-            <span class="text-2xl">🕒</span>
-            <h3 class="text-xl font-bold text-slate-900">
-              {{ configService.getSetting('opening_hours_title') || "Horaires d'ouverture" }}
-            </h3>
+          <!-- Téléphone -->
+          <div class="bg-white rounded-lg p-6 border border-slate-200 shadow-lg">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="text-2xl">📞</span>
+              <h3 class="text-xl font-bold text-slate-900">Téléphone</h3>
+            </div>
+            <a [href]="'tel:' + (configService.getSetting('contact_phone') || '+33123456789')"
+              class="text-slate-600 hover:text-slate-900 hover:underline">
+              <!-- MODIFICATION: Téléphone dynamique -->
+              {{ configService.getSetting('contact_phone') || '+33 1 23 45 67 89' }}
+            </a>
           </div>
-          <div class="space-y-2">
-            <!-- Horaires avec gestion du "Fermé" -->
-            <div *ngFor="let schedule of getFormattedOpeningHours()" class="flex justify-between items-center">
-              <span class="text-slate-600">{{ schedule.day }}</span>
-              <span 
-                [class]="schedule.isClosed ? 
+
+          <!-- Horaires -->
+          <!-- ... reste du code inchangé ... -->
+
+          <!-- Horaires -->
+          <div class="bg-white rounded-lg p-6 border border-slate-200 shadow-lg">
+            <div class="flex items-center gap-2 mb-4">
+              <span class="text-2xl">🕒</span>
+              <h3 class="text-xl font-bold text-slate-900">
+                {{ configService.getSetting('opening_hours_title') || "Horaires d'ouverture" }}
+              </h3>
+            </div>
+            <div class="space-y-2">
+              <!-- Horaires avec gestion du "Fermé" -->
+              <div *ngFor="let schedule of getFormattedOpeningHours()" class="flex justify-between items-center">
+                <span class="text-slate-600">{{ schedule.day }}</span>
+                <span [class]="schedule.isClosed ? 
                   'text-red-600 font-medium' : 
-                  'text-slate-900 font-medium'"
-              >
-                {{ schedule.hours }}
-                <span *ngIf="schedule.isClosed" class="ml-1">🔒</span>
-              </span>
-            </div>
-            
-            <!-- Fallback si pas d'horaires -->
-            <div *ngIf="getFormattedOpeningHours().length === 0" class="text-blue-600 text-sm">
-              Horaires non définis
+                  'text-slate-900 font-medium'">
+                  {{ schedule.hours }}
+                  <span *ngIf="schedule.isClosed" class="ml-1">🔒</span>
+                </span>
+              </div>
+
+              <!-- Fallback si pas d'horaires -->
+              <div *ngIf="getFormattedOpeningHours().length === 0" class="text-blue-600 text-sm">
+                Horaires non définis
+              </div>
             </div>
           </div>
-        </div>
 
-<!-- ... reste du code inchangé ... -->
+          <!-- ... reste du code inchangé ... -->
 
-        <!-- Adresse rapide -->
-        <div class="bg-slate-100/50 border border-slate-200 rounded-lg p-6">
-          <p class="text-sm text-slate-700">
-            🏠 
-            <!-- MODIFICATION: Adresse dynamique -->
-            <span class="font-medium">
-              {{ configService.getSetting('address_title') || 'Notre adresse' }} :
-            </span><br>
-            {{ configService.getSetting('contact_address') || '123 Rue des Antiquités, 75001 Paris' }}
-          </p>
+          <!-- Adresse rapide -->
+          <div class="bg-slate-100/50 border border-slate-200 rounded-lg p-6">
+            <p class="text-sm text-slate-700">
+              🏠
+              <!-- MODIFICATION: Adresse dynamique -->
+              <span class="font-medium">
+                {{ configService.getSetting('address_title') || 'Notre adresse' }} :
+              </span><br>
+              {{ configService.getSetting('contact_address') || '123 Rue des Antiquités, 75001 Paris' }}
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-  </main>
-</div>
+    </main>
+  </div>
 </app-public-layout>

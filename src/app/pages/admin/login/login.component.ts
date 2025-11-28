@@ -4,10 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SupabaseAuthService } from '../../../services/supabase-auth.service';
 
-@Component({  // ← CE DÉCORATEUR DOIT ÊTRE PRÉSENT
+@Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule], // ← IMPORTS CORRECTS
+  imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -20,7 +20,7 @@ export class LoginComponent {
   constructor(
     private authService: SupabaseAuthService,
     private router: Router
-  ) {}
+  ) { }
 
   async onSubmit() {
     if (!this.email || !this.password) {
@@ -33,7 +33,7 @@ export class LoginComponent {
 
     try {
       const { error, user } = await this.authService.signIn(this.email, this.password);
-      
+
       if (error) {
         this.error = this.getErrorMessage(error.message);
       } else if (user) {

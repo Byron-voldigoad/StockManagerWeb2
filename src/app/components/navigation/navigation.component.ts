@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SiteConfigService } from '../../services/site-config.service';
@@ -10,18 +10,32 @@ import { SiteConfigService } from '../../services/site-config.service';
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.css'
 })
-export class NavigationComponent {
+export class NavigationComponent implements OnInit {
   configService = inject(SiteConfigService);
   
-  // NOUVEAU: État du menu mobile
+  // NOUVEAU: URL du logo dynamique
+  logoUrl: string = '';
+  
+  // État du menu mobile
   isMobileMenuOpen = false;
 
-  // NOUVEAU: Méthode pour toggle le menu mobile
+  async ngOnInit() {
+    // Charger le logo au démarrage
+    await this.loadLogo();
+  }
+
+  // NOUVEAU: Charger le logo depuis les settings
+  async loadLogo() {
+    const logo = await this.configService.getSetting('site_logo');
+    if (logo && logo.trim() !== '') {
+      this.logoUrl = logo;
+    }
+  }
+
   toggleMobileMenu() {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
   }
 
-  // NOUVEAU: Fermer le menu après navigation
   closeMobileMenu() {
     this.isMobileMenuOpen = false;
   }
